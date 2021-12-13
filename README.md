@@ -4,7 +4,7 @@ This is the public-facing portion of the course website; also see [the Canvas co
 
 ### Course documents
 
-* [syllabus](Add link under docs)
+* [syllabus](docs/syllabus.md)
 * [homework submission instructions](Add link under docs)
 * [textbooks and online resources](docs/resources.md)
 * [CPSC 340 vs. CPSC 330 vs. CPSC 440](docs/340_330_440.md)
