@@ -83,7 +83,7 @@ Undergraduate and graduate students from any department are welcome to take the 
   
 If you are sick on the date of the final exam, do not attend. You must apply for deferred standing (an academic concession) through Science Advising no later than 48 hours after the missed final. Students who are granted deferred standing write the final exam at a later date. More information and the application are [available here](https://science.ubc.ca/students/advising/concession); you can also read [the formal UBC policy](http://www.calendar.ubc.ca/vancouver/index.cfm?tree=3,329,0,0).
 
-**If an instructor gets sick:** We will do our best to say well, but if we develop symptoms / test positive for Covid / etc, we will not come to class. The other instructor, or one of the other experts in machine learning on campus, will most likely substitute. It is also possible that some class sessions could be required to be online; if so, it will be announced with as much warning as possible by email and on Canvas. In this (hopefully unlikely) event, our classroom will still be available for you to sit in for the lecture; recordings will also still be available.
+**If an instructor gets sick:** We will do our best to say well, but if we develop symptoms / test positive for Covid / etc, we will not come to class. The other instructor, or one of the other experts in machine learning on campus, will most likely substitute. It is also possible that some class sessions could be required to be online; if so, it will be announced with as much warning as possible by email and on Piazza. In this (hopefully unlikely) event, our classroom will still be available for you to sit in for the lecture; recordings will also still be available.
 
 
 ## Grading
