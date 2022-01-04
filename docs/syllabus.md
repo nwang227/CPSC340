@@ -120,7 +120,7 @@ If you can't make it by that time, you can use up to 4 "late days" through the s
 There is no penalty for using late days up to these limits. If you over-use late days, you will get a 0 on that assignment. In exceptional circumstances, we can work something out through the academic concession process (see below). "I had a lot of assignments in my other courses" or similar is not grounds for this; do your best to plan ahead, and keep in mind that each assignment is only a relatively small percentage of your final grade.
 
 ### Citing sources
-If you use information from students outside your group or from online sources or lecture notes, cite this at the start of each question. **You will receive a mark of 0 for the assignment (and possibly other consequences) if you are found copying from other sources without citation**.
+If you use information from students outside your group or from online sources or lecture notes, cite this at the start of each question. **You will receive a mark of 0 for the entire assignment or exam (and possibly other consequences) if you are found copying from other sources without citation**.
 
 
 ### Midterm
