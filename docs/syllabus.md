@@ -36,7 +36,7 @@ We will roughly cover the following topics:
 
 Tutorials are completely optional. The list of tutorials can be found [here](https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=340). See the ones starting with "T1". **You do not need to be officially registered for a tutorial to be part of the course.**
 
-**Office hours**: See [here](https://www.cs.ubc.ca/~mgelbart/calendar.html). There will be a mixture of in-person and online office hours available.
+**Office hours**: See [here](https://www.cs.ubc.ca/~mgelbart/calendarTODO.html)[TODO: Not yet updated for 2022]. There will be a mixture of in-person and online office hours available.
 
 ## Teaching Team
 
