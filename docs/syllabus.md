@@ -91,9 +91,8 @@ The grading scheme for the course is as follows:
 
 | Component  | Weight  |
 |-------------|-----|
-| Syllabus quiz | 1% |
 | Assignments | 30% |
-| Midterm  | 19% |
+| Midterm  | 20% |
 | Final | 50% |
 
 The tentative plan is for all assignments to be weighted equally. The instructor reserves the right to change this in case, for example, one of the assignments needs to be shortened or cut.
