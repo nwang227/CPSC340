@@ -24,6 +24,8 @@ We will roughly cover the following topics:
 
 ## Class meetings
 
+Until Jan 24, we will meet on https://ubc.zoom.us/j/9920729429?pwd=VWVkZ0ZFd1o5OTJkd2dKN3dpWXhlQT09
+
 **Lectures**:
 
 | Section | Day  | Time   | Location |
