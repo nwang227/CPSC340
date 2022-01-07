@@ -126,13 +126,13 @@ If you use information from students outside your group or from online sources o
 
 ### Midterm
 
-The midterm exam will take place on **UPDATE THE DATE**. The exam will be computer-based through Canvas. You can take the exam from anywhere.
+The midterm exam will take place on Feb 17th. The exam will be computer-based through Canvas. You can take the exam from anywhere.
 
 **Missed midterm exam**. There is no makeup midterm exam. If you miss the midterm exam, or anticipate missing the midterm exam, please see the Academic concessions section below. In most cases, if you have missed the midterm exam for a justified reason, the weight of the midterm component of the course will be transferred to the final exam.
 
 ### Final exam
 
-The date of the final exam is **UPDATE THE DATE** and the exam will be **online**. The exam should take roughly 2.5 hours but you can complete it anytime from 8:30am to 8:30pm on the exam day. More details on the format TBA. If you'd like to use it, the official final exam room, *UPDATE THE ROOM*, will be available from 8:30-11am.
+The date of the final exam will be posted automatically in SSC around 2 months into the course and the exam will be **online**. The exam should take roughly 2.5 hours but you can complete it anytime from 8:30am to 8:30pm on the exam day. More details on the format TBA. 
 
 
 ## Academic concessions
