@@ -1,6 +1,6 @@
 # CPSC 340: Machine Learning and Data Mining (2021W2)
 
-This is the public-facing portion of the course website; also see [the Canvas course](https://canvas.ubc.ca/courses/83421) for links to the course-specific pages for [Piazza](https://piazza.com/class/ky0odbs6f7424n), Gradescope, lecture recordings, and submitting assignments.
+This is the public-facing portion of the course website; also see [the Canvas course](https://canvas.ubc.ca/courses/83421) for links to the course-specific pages for [Piazza]( piazza.com/ubc.ca/winterterm22022/cpsc3402012022021w2), Gradescope, lecture recordings, and submitting assignments.
 
 ### Course documents
 
