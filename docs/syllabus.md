@@ -38,7 +38,7 @@ Until Jan 24, we will meet on https://ubc.zoom.us/j/9920729429?pwd=VWVkZ0ZFd1o5O
 
 Tutorials are completely optional. The list of tutorials can be found [here](https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=CPSC&course=340). See the ones starting with "T1". **You do not need to be officially registered for a tutorial to be part of the course.**
 
-**Office hours**: See [here](https://www.cs.ubc.ca/~mgelbart/calendarTODO.html)[TODO: Not yet updated for 2022]. There will be a mixture of in-person and online office hours available.
+**Office hours**: See Canvas Zoom schedule. Office hours will be on Zoom this semester. 
 
 ## Teaching Team
 
