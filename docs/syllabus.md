@@ -49,7 +49,12 @@ Tutorials are completely optional. The list of tutorials can be found [here](htt
 
 **Teaching Assistants**:
 
-- To be added
+- Dylan	Green
+- Ehsan Soltan Aghai
+- Helen Zhang
+- Milad	Jalali
+- Paul Lin
+- Tianyu Hua
 
 ## Prerequisites
 
