@@ -24,11 +24,8 @@ We will roughly cover the following topics:
 
 ## Class meetings
 
-Until Jan 24, we will meet on Zoom
+Until Jan 24, we will meet on Zoom  https://ubc.zoom.us/j/61979299308?pwd=bW5uZGpPV2FaVzViZE9raDFPM3dTdz09
 
-12-1pm Class: https://ubc.zoom.us/j/66268490824?pwd=N1JraUt1VytXZmtYQU1ITUZTaC9GQT09
-
-2-3pm Class: https://ubc.zoom.us/j/9920729429?pwd=VWVkZ0ZFd1o5OTJkd2dKN3dpWXhlQT09
 
 **Lectures**:
 
