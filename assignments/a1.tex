@@ -1,4 +1,4 @@
-% !TEX enableShellEscape = yes
+%!TEX enableShellEscape = yes
 % (The above line makes atom's latex package compile with -shell-escape
 % for minted, and is just ignored by other systems.)
 \documentclass{article}
@@ -13,11 +13,14 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 
-% Use one or the other of these for displaying code.
+% Use one or the other of these for displaying code.w
 % NOTE: If you get
 %  ! Package minted Error: You must invoke LaTeX with the -shell-escape flag.
 % and don't want to use minted, just comment out the next line
-\usepackage{minted} \BeforeBeginEnvironment{minted}{\begingroup\color{black}} \AfterEndEnvironment{minted}{\endgroup} \setminted{autogobble,breaklines,breakanywhere,linenos}
+\usepackage{minted} 
+\BeforeBeginEnvironment{minted}{\begingroup\color{black}} 
+\AfterEndEnvironment{minted}{\endgroup} 
+\setminted{autogobble,breaklines,breakanywhere,linenos}
 
 \usepackage{listings}
 
@@ -133,7 +136,7 @@
   \begin{enumerate}
   \item $\sum_{i=1}^n x_iy_i$ (inner product).
   \begin{answer}
-  14
+    14
   \end{answer}
   \item $\sum_{i=1}^n x_i z_i$ (inner product between orthogonal vectors).
   \begin{answer}
@@ -230,12 +233,20 @@
   \begin{enumerate}
   \item You are offered the opportunity to play the following game: your opponent rolls 2 regular 6-sided dice. If the difference between the two rolls is at least 3, you win \$30. Otherwise, you get nothing. What is a fair price for a ticket to play this game once? In other words, what is the expected value of playing the game?
   %
+  \begin{answer}
+    10
+  \end{answer}
   \item Consider two events $A$ and $B$ such that $\Pr(A \cap B)=0$ (they are mutually exclusive). If $\Pr(A) = 0.4$ and $\Pr(A \cup B) = 0.95$, what is $\Pr(B)$? Note: $\Pr(A \cap B)$ means
   ``probability of $A$ and $B$'' while $p(A \cup B)$ means ``probability of $A$ or $B$''. It may be helpful to draw a Venn diagram.
   %
+  \begin{answer}
+    0.55
+  \end{answer}
   \item Instead of assuming that $A$ and $B$ are mutually exclusive ($\Pr(A \cap B) = 0)$, what is the answer to the previous question if we assume that $A$ and $B$ are independent?
   %
-
+  \begin{answer}
+   $\frac{11}{12}$
+  \end{answer}
 
   \end{enumerate}
 
@@ -247,15 +258,28 @@
 
   \begin{enumerate}
   \item What is the probability that a random person would test positive, $P(T=1)$?
-  
+  \begin{answer}
+    0.0100087
+  \end{answer}
   \item In the above, do most of these positive tests come from true positives or from false positives?
   %
+  \begin{answer}
+    Flase positive
+  \end{answer}
   \item What is the probability that a random person who tests positive is a user, $P(D=1 \mid T=1)$?
-  
+  \begin{answer}
+    0.00096916
+  \end{answer}
   \item Suppose you have given this test to a random person and it came back positive, are they likely to be a drug user?
   %
+  \begin{answer}
+    No
+  \end{answer}
   \item Suppose you are the designer of this drug test. You may change how the test is conducted, which may influence factors like false positive rate, false negative rate, and the number of samples collected. What is one factor you could change to make this a more useful test?
   %
+  \begin{answer}
+    False positive rate
+  \end{answer}
   \end{enumerate}
 
 
@@ -272,10 +296,18 @@
   \begin{enumerate}
   \item Find the derivative of the function $f(x) = 3x^3 -2x + 5$.
   %
+  \begin{answer}
+    $9x^2 - 2$
+  \end{answer}
   \item Find the derivative of the function $f(x) = x(1-x)$.
   %
+  \begin{answer}
+    $1-2x$
+  \end{answer}
   \item Let $p(x) = \frac{1}{1+\exp(-x)}$ for $x \in \R$. Compute the derivative of the function $f(x) = x-\log(p(x))$ and simplify it by using the function $p(x)$.
-  
+  \begin{answer}
+    $p(x)$
+  \end{answer}
   \end{enumerate}
   Remember that in this course we will $\log(x)$ to mean the ``natural'' logarithm of $x$, so that $\log(\exp(1)) = 1$. Also, observe that $p(x) = 1-p(-x)$ for the final part.
 
@@ -286,16 +318,41 @@
   \begin{enumerate}
   \item $f(x) = x_1^2 + \exp(x_1 + 3x_2)$ where $x \in \R^2$.
   %
+  \begin{answer}
+    $\left[ \begin{array}{c}
+      2x_1 + exp(x_1 + 3x_2) \\
+      3exp(x_1 + 3x_2) \\
+    \end{array} \right]$
+  \end{answer}
   \item $f(x) = \log\left(\sum_{i=1}^3\exp(x_i)\right)$ where $x \in \R^3$ (simplify the gradient by defining $Z = \sum_{i=1}^3\exp(x_i)$).
   %
+  \begin{answer}
+    $ \left[ \begin{array}{c}
+      exp(x_1)\\
+      exp(x_2)\\
+      exp(x_3)\\
+    \end{array}\right]\frac{1}{Z} $
+  \end{answer}
   \item $f(x) = a^Tx + b$ where $x \in \R^3$ and $a \in \R^3$ and $b \in \R$.
   %
+  \begin{answer}
+    $a^T$
+  \end{answer}
   \item $f(x) = \frac12 x^\top A x$ where $A=\left[ \begin{array}{cc}
   2 & -1 \\
   -1 & 2 \end{array} \right]$ and $x \in \mathbb{R}^2$.
   %
+  \begin{answer}
+    $ \left[ \begin{array}{c}
+      2x_1 - x_2 \\
+      2x_2 - x_1 \\
+    \end{array} \right] $
+  \end{answer}
   \item $f(x) = \frac{1}{2}\norm{x}^2$ where $x \in \R^d$.
   %
+  \begin{answer}
+    $ x$
+  \end{answer}
   \end{enumerate}
 
   Hint: it may be helpful to write out the linear algebra expressions in terms of summations.
@@ -309,6 +366,9 @@
   \begin{enumerate}
   \item $\min \, 3x^2-2x+5$, or, in words, the minimum value of the function $f(x) = 3x^2 -2x + 5$ for $x \in \R$.
   %
+  \begin{answer}
+    $\frac{14}{3}$
+  \end{answer}
   \item $\max_{x \in [0, 1]} x(1-x)$
   %
   \item $\min_{x \in [0, 1]} \, x(1-x)$
