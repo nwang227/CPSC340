@@ -57,8 +57,14 @@ def q5_1():
     X = df.values
     names = df.columns.values
 
-    # YOUR CODE HERE
-    raise NotImplementedError()
+
+    print("Min: %.3f Max: %.3f Mean: %.3f Median:%.3f Mode: %.3f" % (np.min(X),np.max(X), np.mean(X), np.median(X), mode(X)))
+
+    print("5 quantile: %.3f; 25 quantile: %.3f; 50 quantile: %.3f; 75 quantile: %.3f; 95 quantile: %.3f" % (np.quantile(X,0.05),np.quantile(X,0.25),np.quantile(X,0.5),np.quantile(X,0.75),np.quantile(X,0.95)))
+
+
+        
+
 
 
 
@@ -137,6 +143,7 @@ def q6_3():
     print("\nFigure saved as '%s'" % fname)
 
 
+
 @handle("6.4")
 def q6_4():
     # Load citiesSmall dataset
@@ -171,7 +178,7 @@ def q6_4():
     print_stump(model.submodel_yes.stump_model)
     print("<=")
     print_stump(model.submodel_no.stump_model)
-
+q6_4()
 
 @handle("6.5")
 def q6_5():
@@ -237,5 +244,7 @@ def q6_5():
     print("\nFigure saved as '%s'" % fname)
 
 
+
 if __name__ == "__main__":
     main()
+

@@ -5,11 +5,11 @@ def func1(N):
     for i in range(N):
         print("Hello!")
 
-
 def func2(N):
     x = np.zeros(N)
     x += 1000
     return x
+
 
 
 def func3(N):
@@ -17,7 +17,7 @@ def func3(N):
     x = x * N
     return x
 
-
+func3(2)
 def func4(N):
     x = 0
     for i in range(N):

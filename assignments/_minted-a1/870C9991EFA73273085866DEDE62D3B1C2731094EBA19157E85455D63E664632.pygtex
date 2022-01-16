@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{foo\PYGZus{}grad}\PYG{p}{(}\PYG{n}{x}\PYG{p}{):}
+    \PYG{k}{return} \PYG{l+m+mi}{6}\PYG{o}{*} \PYG{n}{x}\PYG{o}{**}\PYG{l+m+mi}{5}
+\end{Verbatim}

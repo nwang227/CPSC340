@@ -12,7 +12,7 @@
 \usepackage{parskip}
 \usepackage{amssymb}
 \usepackage{hyperref}
-
+\author{Nan Wang}
 % Use one or the other of these for displaying code.w
 % NOTE: If you get
 %  ! Package minted Error: You must invoke LaTeX with the -shell-escape flag.
@@ -371,14 +371,32 @@
   \end{answer}
   \item $\max_{x \in [0, 1]} x(1-x)$
   %
+  \begin{answer}
+    0.25
+  \end{answer}
   \item $\min_{x \in [0, 1]} \, x(1-x)$
   %
+  \begin{answer}
+    0
+  \end{answer}
   \item $\argmax_{x \in [0,1]} \, x(1-x)$
   %
+  \begin{answer}
+    0.5
+  \end{answer}
   \item $\min_{x \in [0, 1]^2} \, x_1^2 + \exp(x_2)$ -- in other words $x_1\in [0,1]$ and $x_2\in [0,1]$
   %
+  \begin{answer}
+    1
+  \end{answer}
   \item $\argmin_{x \in [0,1]^2} \, x_1^2 + \exp(x_2)$ where $x \in [0,1]^2$.
   %
+  \begin{answer}
+    $ \left[ \begin{array}{c}
+      0\\
+      0\\
+    \end{array} \right]$
+  \end{answer}
   \end{enumerate}
 
   Note: the notation $x\in [0,1]$ means ``$x$ is in the interval $[0,1]$'', or, also equivalently, $0 \leq x \leq 1$.
@@ -396,10 +414,27 @@
   You should do this directly in \texttt{grads.py}; no need to make a fresh copy of the file. When finished, you can run \texttt{python main.py 3.4} to test out your code. \ask{Include this code following the instructions in the submission instructions.}
 
   \begin{minted}{python}
-def foo(x):
-    return 2 * x ** 3 + x **5
+def foo_grad(x):
+    return 6* x**5
   \end{minted}
-
+  \begin{minted}{python}
+def bar_grad(x):
+# If there is no zero element, then report the normal gradient 
+    if np.prod(x) != 0: 
+        return np.prod(x) * x**-1
+# If there are more than two zeros, the gradient will be a zero vector
+    else:
+        if x.size - np.count_nonzero(x) >= 2:
+            return np.zeros(x.size)
+#If there is only one zero, the derivative of the zero element will be nonzero, and all other elements will be zero
+        else:
+            prod = 1
+            for x_i in x:
+                if x_i != 0:
+                    prod *= x_i
+            result = np.where(x == 0, prod, 0)
+            return result
+  \end{minted}
 
   Hint: it's probably easiest to first understand on paper what the code is doing, then compute
   the gradient, and then translate this gradient back into code.
@@ -430,8 +465,14 @@ def foo(x):
   \begin{enumerate}
   \item What is the minimum depth of a binary tree with 64 leaf nodes?
   %
+  \begin{answer}
+    6
+  \end{answer}
   \item What is the minimum depth of binary tree with 64 nodes (including leaves and all other nodes)?
   %
+  \begin{answer}
+    6
+  \end{answer}
   \end{enumerate}
 
   \subsection{Common Runtimes \pts{5}}
@@ -441,14 +482,29 @@ def foo(x):
   \begin{enumerate}
   \item What is the cost of finding the largest number in an unsorted list of $n$ numbers?
   %
+  \begin{answer}
+    O(n)
+  \end{answer}
   \item What is the cost of finding the smallest element greater than 0 in a \emph{sorted} list with $n$ numbers.
   %
+  \begin{answer}
+    O(log n)
+  \end{answer}
   \item What is the cost of finding the value associated with a key in a hash table with $n$ numbers? \\(Assume the values and keys are both scalars.)
   %
+  \begin{answer}
+    O(1)
+  \end{answer}
   \item What is the cost of computing the inner product $a^Tx$, where $a$ is $d \times 1$ and $x$ is $d \times 1$?
   %
+  \begin{answer}
+    O(d)
+  \end{answer}
   \item What is the cost of computing the quadratic form $x^TAx$ when $A$ is $d \times d$ and $x$ is $d \times 1$?
   %
+  \begin{answer}
+    $O(d^2)$
+  \end{answer}
   \end{enumerate}
 
   \subsection{Running times of code \pts{4}}
@@ -456,6 +512,12 @@ def foo(x):
   Your repository contains a file named \texttt{bigO.py}, which defines several functions
   that take an integer argument $N$. For each function, \ask{state the running time as a function of $N$, using big-O notation}.
   %
+  \begin{answer}
+    func1: O(N); 
+    func2: O(N); 
+    func3: O(1); 
+    func4: O($N^2$)
+  \end{answer}
 
 
   \clearpage
@@ -474,8 +536,18 @@ def foo(x):
   \ask{Report the following statistics}:
   \begin{enumerate}
   \item The minimum, maximum, mean, median, and mode of all values across the dataset.
+  \begin{answer}
+    Min: 0.352; Max: 4.862; Mean: 1.325; Median: 1.159; Mode: 0.770
+  \end{answer}
   \item The $5\%$, $25\%$, $50\%$, $75\%$, and $95\%$ quantiles of all values across the dataset.
+  \begin{answer}
+    5 quantile: 0.465; 25 quantile: 0.718; 50 quantile: 1.159; 75 quantile: 1.813; 95 quantile: 2.624
+  \end{answer}
+
   \item The names of the regions with the highest and lowest means, and the highest and lowest variances.% \item The pairs of regions with the highest and lowest correlations.
+  \begin{answer}
+    Highest mean: WtdILI; Lowest mean: Pac; Highest variance: Mtn; Lowest variance: Pac 
+  \end{answer}
   \end{enumerate}
   In light of the above, \ask{is the mode a reliable estimate of the most ``common" value? Describe another way we could give a meaningful ``mode" measurement for this (continuous) data.} Note: the function \texttt{utils.mode()} will compute the mode value of an array for you.
 
@@ -493,16 +565,34 @@ def foo(x):
   The figure contains the following plots, in a shuffled order:
   \begin{enumerate}
   \item A single histogram showing the distribution of \emph{each} column in $X$.
+  \begin{answer}
+    Plot D. It's a histogram containing the information of each column
+  \end{answer}
   \item A histogram showing the distribution of each the values in the matrix $X$.
+  \begin{answer}
+    Plot C. It's a histogram of all the values in the dataset
+  \end{answer}
   \item A boxplot grouping data by weeks, showing the distribution across regions for each week.
+  \begin{answer}
+    Plot B. It's boxplot in weeks.
+  \end{answer}
   \item A plot showing the illness percentages over time.
+  \begin{answer}
+    Plot A. It's a line graph of illness percentage over time.
+  \end{answer}
   \item A scatterplot between the two regions with highest correlation.
+  \begin{answer}
+    Plot F. The saccterplot looks pretty much like the 45 degree line, indicating the two variables are very similar.
+  \end{answer}
   \item A scatterplot between the two regions with lowest correlation.
+  \begin{answer}
+    Plot E. In the scatterplot, there are many outliers.
+  \end{answer}
   \end{enumerate}
 
   \ask{Match the plots (labeled A-F) with the descriptions above (labeled 1-6), with an extremely brief (a few words is fine) explanation for each decision.}
 
-  %
+  
 
 
 
@@ -534,10 +624,12 @@ def foo(x):
   \subsection{Splitting rule \pts{1}}
 
   Is there a particular type of features for which it makes sense to use an equality-based splitting rule rather than the threshold-based splits we discussed in class?
+  \begin{answer}
+    Categorical features
+  \end{answer}
 
-  %
 
-  \subsection{Decision Stump Implementation \pts{8}}
+  \subsection{Decision Stump Implementation \pts{8}}\label{sec6.2}
 
   The file \texttt{decision\string_stump.py} contains the class \texttt{DecisionStumpEquality} which
   finds the best decision stump using the equality rule and then makes predictions using that
@@ -552,11 +644,15 @@ def foo(x):
   Hint: you may want to start by copy/pasting the contents \texttt{DecisionStumpEquality} and then make modifications from there. %You can make modifications from there. % But you are asked to keep them separate rather than directly modifying the provided code so that you can keep both versions in tact and compare them.
   % Note: please keep the same variable names, as subsequent parts of this assignment rely on this!
 
+  \centerfig{0.7}{./figs/q6_2_decisionBoundary}
+  \begin{answer}
+    Decision Stump with inequality rule error: 0.253. See code \hyperref[code6.2]{here}.
+  \end{answer}
   
 
 
 
-  \subsection{Decision Stump Info Gain Implementation \pts{8}}
+  \subsection{Decision Stump Info Gain Implementation \pts{8}}\label{sec6.3}
 
   In \texttt{decision\string_stump.py}, \ask{create a \texttt{DecisionStumpInfoGain} class that
   fits using the information gain criterion discussed in lecture.
@@ -577,9 +673,12 @@ def foo(x):
   a shorter array by default, which is not what you want. Setting \texttt{minlength} to the
   number of classes solves this problem.
 
-
+  \centerfig{0.7}{./figs/q6_3_decisionBoundary}
+  \begin{answer}
+    Decision Stump with info gain rule error: 0.325. See code \hyperref[code6.3]{here}.
+  \end{answer}
   
-
+  
 
   \subsection{Hard-coded Decision Trees \pts{2}}
 
@@ -597,7 +696,17 @@ def foo(x):
 
   Hint: if you plot the decision boundary you can do a quick visual check to see if your code is consistent with the plot.
 
-  
+  \begin{minted}{python}
+  def predict(X):
+    if X[0] <= -80.305106:
+            y = 0
+    else:
+        if X[1] <= 37.669007:
+            y = 0
+        else:
+            y = 1
+    return y
+   \end{minted}
 
 
 
@@ -620,8 +729,10 @@ def foo(x):
   Note: the code also prints out the amount of time spent. You'll notice that sklearn's implementation is substantially faster. This is because
   our implementation is based on the $O(n^2d)$ decision stump learning algorithm and sklearn's implementation presumably uses the faster $O(nd\log n)$
   decision stump learning algorithm that we discussed in lecture.
-
-  %
+  \centerfig{0.7}{./figs/q6_5_decisionBoundary}
+  \begin{answer}
+    From the decision error graph we can see that the error rate algorithm stops to improve accuracy after 4 depths of tree, while the others go to almost 0 errors. The reason behind this is that it's hard to gain accuracy directly through each split. With the error rate decision rule, a split needs to change the majority of y in order to update the prediction, but it can be updated with marginal change of entropy with the informaiton gain rule.
+  \end{answer}
 
   \subsection{Comparing implementations \pts{2}}
 
@@ -631,6 +742,162 @@ def foo(x):
   that the implementations are probably equivalent?
 
   %
+  \begin{answer}
+    In general, we are not sure whether they are the same. Firstly, they might have different errors but same number of errors. Secondly, it might just be a coincidence with this exact sample. We can do experiments with different samples and directly compare their classification result.
+  \end{answer}
 
 
+  \clearpage \section{Appendix}
+  Code for \ref{sec6.2}
+  \label{code6.2}\begin{minted}{python}
+    class DecisionStumpErrorRate:
+      y_hat_yes = None
+      y_hat_no = None
+      j_best = None
+      t_best = None
+  
+      def fit(self, X, y):
+          n, d = X.shape
+  
+          # Get an array with the number of 0's, number of 1's, etc.
+          count = np.bincount(y)
+  
+          # Get the index of the largest value in count.
+          # Thus, y_mode is the mode (most popular value) of y
+          y_mode = np.argmax(count)
+  
+          self.y_hat_yes = y_mode
+          self.y_hat_no = None
+          self.j_best = None
+          self.t_best = None
+  
+          # If all the labels are the same, no need to split further
+          if np.unique(y).size <= 1:
+              return
+  
+          minError = np.sum(y != y_mode)
+  
+          # Loop over features looking for the best split
+          for j in range(d):
+              for i in range(n):
+                  # Choose value to equate to
+                  t = X[i, j]
+  
+                  # Find most likely class for each split
+                  weakly_less = X[:, j] <= t
+                  y_yes_mode = utils.mode(y[weakly_less])
+                  y_no_mode = utils.mode(y[~weakly_less])  # ~ is "logical not"
+  
+                  # Make predictions
+                  y_pred = y_yes_mode * np.ones(n)
+                  y_pred[np.round(X[:, j]) > t] = y_no_mode
+  
+                  # Compute error
+                  errors = np.sum(y_pred != y)
+  
+                  # Compare to minimum error so far
+                  if errors < minError:
+                      # This is the lowest error, store this value
+                      minError = errors
+                      self.j_best = j
+                      self.t_best = t
+                      self.y_hat_yes = y_yes_mode
+                      self.y_hat_no = y_no_mode
+  
+  
+      def predict(self, X):
+          n, d = X.shape
+          if self.j_best is None:
+              return self.y_hat_yes * np.ones(n)
+  
+          y_hat = np.zeros(n)
+  
+          for i in range(n):
+              if X[i, self.j_best] <= self.t_best:
+                  y_hat[i] = self.y_hat_yes
+              else:
+                  y_hat[i] = self.y_hat_no
+  
+          return y_hat
+    \end{minted}
+
+Back to section \ref{sec6.2}.
+
+\clearpage
+Code for \ref{sec6.3}
+\label{code6.3}\begin{minted}{python} 
+  class DecisionStumpInfoGain:
+    # This is not required, but one way to simplify the code is
+    # to have this class inherit from DecisionStumpErrorRate.
+    # Which methods (init, fit, predict) do you need to overwrite?
+    y_hat_yes = None
+    y_hat_no = None
+    j_best = None
+    t_best = None
+
+    def fit(self, X, y):
+        n, d = X.shape
+
+        # Get an array with the number of 0's, number of 1's, etc.
+        count = np.bincount(y)
+
+        # Get the index of the largest value in count.
+        # Thus, y_mode is the mode (most popular value) of y
+        y_mode = np.argmax(count)
+
+        self.y_hat_yes = y_mode
+        self.y_hat_no = None
+        self.j_best = None
+        self.t_best = None
+        p = count/y.size
+
+        # If all the labels are the same, no need to split further
+        if np.unique(y).size <= 1:
+            return
+
+        minEntropy = entropy(p)
+
+        # Loop over features looking for the best split
+        for j in range(d):
+            for i in range(n):
+                # Choose value to equate to
+                t = X[i, j]
+
+                # Find most likely class for each split
+                weakly_less = X[:, j] <= t
+                y_yes_mode = utils.mode(y[weakly_less])
+                y_no_mode = utils.mode(y[~weakly_less])
+                y_yes = y[weakly_less]
+                y_no = y[~weakly_less] 
+                p_yes = np.bincount(y_yes)/y_yes.size
+                p_no = np.bincount(y_no)/y_no.size
+
+                NewEntropy = y_yes.size/y.size * entropy(p_yes) + y_no.size/y.size *entropy(p_no)
+
+                # Compare to minimum error so far
+                if NewEntropy < minEntropy:
+                    # This is the lowest error, store this value
+                    minEntropy = NewEntropy
+                    self.j_best = j
+                    self.t_best = t
+                    self.y_hat_yes = y_yes_mode
+                    self.y_hat_no = y_no_mode
+
+    def predict(self, X):
+        n, d = X.shape
+
+        if self.j_best is None:
+            return self.y_hat_yes * np.ones(n)
+
+        y_hat = np.zeros(n)
+
+        for i in range(n):
+            if X[i, self.j_best] <= self.t_best:
+                y_hat[i] = self.y_hat_yes
+            else:
+                y_hat[i] = self.y_hat_no
+
+        return y_hat
+  \end{minted}
+Back to section \ref{sec6.3}.
 \end{document}

@@ -1,3 +1,5 @@
+from cmath import inf
+from math import prod
 import numpy as np
 
 
@@ -20,7 +22,7 @@ def foo(x):
 
 
 def foo_grad(x):
-    # Implementation needs to be here.
+    return 6* x**5
     pass
 
 
@@ -30,8 +32,21 @@ def bar(x):
 
 
 def bar_grad(x):
-    # Implementation needs to be here.
+    if np.prod(x) != 0:
+        return np.prod(x) * x**-1
+    else:
+        if x.size - np.count_nonzero(x) >= 2:
+            return np.zeros(x.size)
+        else:
+            prod = 1
+            for x_i in x:
+                if x_i != 0:
+                    prod *= x_i
+            result = np.where(x == 0, prod, 0)
+            return result
+        
     pass
+
 
 
 # Hint: This is a bit tricky - what if one of the x[i] is zero?

@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n}{X}\PYG{p}{):}
+  \PYG{k}{if} \PYG{n}{X}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{80.305106}\PYG{p}{:}
+          \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}
+  \PYG{k}{else}\PYG{p}{:}
+      \PYG{k}{if} \PYG{n}{X}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{37.669007}\PYG{p}{:}
+          \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}
+      \PYG{k}{else}\PYG{p}{:}
+          \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{1}
+  \PYG{k}{return} \PYG{n}{y}
+\end{Verbatim}
