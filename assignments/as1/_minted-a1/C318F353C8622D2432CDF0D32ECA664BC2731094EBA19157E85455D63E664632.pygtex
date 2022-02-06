@@ -1,0 +1,74 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{DecisionStumpInfoGain}\PYG{p}{:}
+  \PYG{c+c1}{\PYGZsh{} This is not required, but one way to simplify the code is}
+  \PYG{c+c1}{\PYGZsh{} to have this class inherit from DecisionStumpErrorRate.}
+  \PYG{c+c1}{\PYGZsh{} Which methods (init, fit, predict) do you need to overwrite?}
+  \PYG{n}{y\PYGZus{}hat\PYGZus{}yes} \PYG{o}{=} \PYG{k+kc}{None}
+  \PYG{n}{y\PYGZus{}hat\PYGZus{}no} \PYG{o}{=} \PYG{k+kc}{None}
+  \PYG{n}{j\PYGZus{}best} \PYG{o}{=} \PYG{k+kc}{None}
+  \PYG{n}{t\PYGZus{}best} \PYG{o}{=} \PYG{k+kc}{None}
+
+  \PYG{k}{def} \PYG{n+nf}{fit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+      \PYG{n}{n}\PYG{p}{,} \PYG{n}{d} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}
+
+      \PYG{c+c1}{\PYGZsh{} Get an array with the number of 0\PYGZsq{}s, number of 1\PYGZsq{}s, etc.}
+      \PYG{n}{count} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{bincount}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+      \PYG{c+c1}{\PYGZsh{} Get the index of the largest value in count.}
+      \PYG{c+c1}{\PYGZsh{} Thus, y\PYGZus{}mode is the mode (most popular value) of y}
+      \PYG{n}{y\PYGZus{}mode} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{argmax}\PYG{p}{(}\PYG{n}{count}\PYG{p}{)}
+
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}yes} \PYG{o}{=} \PYG{n}{y\PYGZus{}mode}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}no} \PYG{o}{=} \PYG{k+kc}{None}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{j\PYGZus{}best} \PYG{o}{=} \PYG{k+kc}{None}
+      \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{t\PYGZus{}best} \PYG{o}{=} \PYG{k+kc}{None}
+      \PYG{n}{p} \PYG{o}{=} \PYG{n}{count}\PYG{o}{/}\PYG{n}{y}\PYG{o}{.}\PYG{n}{size}
+
+      \PYG{c+c1}{\PYGZsh{} If all the labels are the same, no need to split further}
+      \PYG{k}{if} \PYG{n}{np}\PYG{o}{.}\PYG{n}{unique}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}\PYG{o}{.}\PYG{n}{size} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{:}
+          \PYG{k}{return}
+
+      \PYG{n}{minEntropy} \PYG{o}{=} \PYG{n}{entropy}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
+
+      \PYG{c+c1}{\PYGZsh{} Loop over features looking for the best split}
+      \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{d}\PYG{p}{):}
+          \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+              \PYG{c+c1}{\PYGZsh{} Choose value to equate to}
+              \PYG{n}{t} \PYG{o}{=} \PYG{n}{X}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{]}
+
+              \PYG{c+c1}{\PYGZsh{} Find most likely class for each split}
+              \PYG{n}{weakly\PYGZus{}less} \PYG{o}{=} \PYG{n}{X}\PYG{p}{[:,} \PYG{n}{j}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n}{t}
+              \PYG{n}{y\PYGZus{}yes\PYGZus{}mode} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{mode}\PYG{p}{(}\PYG{n}{y}\PYG{p}{[}\PYG{n}{weakly\PYGZus{}less}\PYG{p}{])}
+              \PYG{n}{y\PYGZus{}no\PYGZus{}mode} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{mode}\PYG{p}{(}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZti{}}\PYG{n}{weakly\PYGZus{}less}\PYG{p}{])}
+              \PYG{n}{y\PYGZus{}yes} \PYG{o}{=} \PYG{n}{y}\PYG{p}{[}\PYG{n}{weakly\PYGZus{}less}\PYG{p}{]}
+              \PYG{n}{y\PYGZus{}no} \PYG{o}{=} \PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZti{}}\PYG{n}{weakly\PYGZus{}less}\PYG{p}{]}
+              \PYG{n}{p\PYGZus{}yes} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{bincount}\PYG{p}{(}\PYG{n}{y\PYGZus{}yes}\PYG{p}{)}\PYG{o}{/}\PYG{n}{y\PYGZus{}yes}\PYG{o}{.}\PYG{n}{size}
+              \PYG{n}{p\PYGZus{}no} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{bincount}\PYG{p}{(}\PYG{n}{y\PYGZus{}no}\PYG{p}{)}\PYG{o}{/}\PYG{n}{y\PYGZus{}no}\PYG{o}{.}\PYG{n}{size}
+
+              \PYG{n}{NewEntropy} \PYG{o}{=} \PYG{n}{y\PYGZus{}yes}\PYG{o}{.}\PYG{n}{size}\PYG{o}{/}\PYG{n}{y}\PYG{o}{.}\PYG{n}{size} \PYG{o}{*} \PYG{n}{entropy}\PYG{p}{(}\PYG{n}{p\PYGZus{}yes}\PYG{p}{)} \PYG{o}{+} \PYG{n}{y\PYGZus{}no}\PYG{o}{.}\PYG{n}{size}\PYG{o}{/}\PYG{n}{y}\PYG{o}{.}\PYG{n}{size} \PYG{o}{*}\PYG{n}{entropy}\PYG{p}{(}\PYG{n}{p\PYGZus{}no}\PYG{p}{)}
+
+              \PYG{c+c1}{\PYGZsh{} Compare to minimum error so far}
+              \PYG{k}{if} \PYG{n}{NewEntropy} \PYG{o}{\PYGZlt{}} \PYG{n}{minEntropy}\PYG{p}{:}
+                  \PYG{c+c1}{\PYGZsh{} This is the lowest error, store this value}
+                  \PYG{n}{minEntropy} \PYG{o}{=} \PYG{n}{NewEntropy}
+                  \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{j\PYGZus{}best} \PYG{o}{=} \PYG{n}{j}
+                  \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{t\PYGZus{}best} \PYG{o}{=} \PYG{n}{t}
+                  \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}yes} \PYG{o}{=} \PYG{n}{y\PYGZus{}yes\PYGZus{}mode}
+                  \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}no} \PYG{o}{=} \PYG{n}{y\PYGZus{}no\PYGZus{}mode}
+
+  \PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{):}
+      \PYG{n}{n}\PYG{p}{,} \PYG{n}{d} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}
+
+      \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{j\PYGZus{}best} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+          \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}yes} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ones}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+
+      \PYG{n}{y\PYGZus{}hat} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+
+      \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+          \PYG{k}{if} \PYG{n}{X}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{j\PYGZus{}best}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{t\PYGZus{}best}\PYG{p}{:}
+              \PYG{n}{y\PYGZus{}hat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}yes}
+          \PYG{k}{else}\PYG{p}{:}
+              \PYG{n}{y\PYGZus{}hat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y\PYGZus{}hat\PYGZus{}no}
+
+      \PYG{k}{return} \PYG{n}{y\PYGZus{}hat}
+\end{Verbatim}
