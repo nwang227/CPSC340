@@ -1,0 +1,34 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{RandomForest}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{max\PYGZus{}depth}\PYG{p}{,} \PYG{n}{num\PYGZus{}trees}\PYG{p}{):}
+        \PYG{n}{DecisionTree}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{max\PYGZus{}depth}\PYG{o}{=}\PYG{n}{max\PYGZus{}depth}\PYG{p}{,} \PYG{n}{stump\PYGZus{}class}\PYG{o}{=}\PYG{n}{RandomStumpInfoGain}
+        \PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{num\PYGZus{}trees} \PYG{o}{=} \PYG{n}{num\PYGZus{}trees}
+
+    \PYG{k}{def} \PYG{n+nf}{fit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}For simplicity, store 50 tree models}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{trees} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{num\PYGZus{}trees}\PYG{p}{):}
+            \PYG{n}{tree} \PYG{o}{=} \PYG{n}{RandomTree}\PYG{p}{(}\PYG{n}{max\PYGZus{}depth}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{max\PYGZus{}depth}\PYG{p}{)}
+            \PYG{n}{tree}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{trees}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{tree}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{):}
+        \PYG{n}{n} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{}Generate a result matrix}
+        \PYG{n}{result} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{n}{n}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{num\PYGZus{}trees}\PYG{p}{))}
+
+        \PYG{c+c1}{\PYGZsh{}For each tree, generate a prediction vector, store it in a matrix}
+        \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{tree} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{trees}\PYG{p}{):}
+            \PYG{n}{y\PYGZus{}i}  \PYG{o}{=} \PYG{n}{tree}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(} \PYG{n}{X}\PYG{p}{)}
+            \PYG{n}{result}\PYG{p}{[:,}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{y\PYGZus{}i}
+
+        \PYG{c+c1}{\PYGZsh{}Find the mode of the predictions}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+            \PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{mode}\PYG{p}{(}\PYG{n}{result}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,:])}
+
+        \PYG{k}{return} \PYG{n}{y}
+\end{Verbatim}

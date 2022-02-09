@@ -1,0 +1,60 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{q2}\PYG{p}{():}
+    \PYG{n}{dataset} \PYG{o}{=} \PYG{n}{load\PYGZus{}dataset}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}ccdebt.pkl\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{X} \PYG{o}{=} \PYG{n}{dataset}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}X\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{dataset}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{X\PYGZus{}test} \PYG{o}{=} \PYG{n}{dataset}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Xtest\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{y\PYGZus{}test} \PYG{o}{=} \PYG{n}{dataset}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}ytest\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{n}\PYG{p}{,}\PYG{n}{d} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}
+
+    \PYG{n}{ks} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{30}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{))}
+    \PYG{n}{train} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{l+m+mi}{8}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{))}
+    \PYG{n}{test} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{l+m+mi}{8}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{))}
+    \PYG{n}{result} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{l+m+mi}{8}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{))}
+
+    \PYG{k}{for}  \PYG{n}{a} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{9}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{):}
+        \PYG{n}{k\PYGZus{}i} \PYG{o}{=} \PYG{p}{(}\PYG{n}{a} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{4} \PYG{o}{+} \PYG{l+m+mi}{1}
+        \PYG{n}{result}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{k\PYGZus{}i}
+
+        \PYG{c+c1}{\PYGZsh{}Compute testing error}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{KNN}\PYG{p}{(}\PYG{n}{k} \PYG{o}{=} \PYG{n}{k\PYGZus{}i}\PYG{p}{)}
+        \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}hat} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{err} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{y\PYGZus{}test} \PYG{o}{!=} \PYG{n}{y\PYGZus{}hat}\PYG{p}{)}
+        \PYG{n}{result}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{]} \PYG{o}{=} \PYG{n}{err}
+
+        \PYG{c+c1}{\PYGZsh{}Compute errors with cross\PYGZhy{}validation}
+        \PYG{k}{for} \PYG{n}{b} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{11}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{):}
+            \PYG{n}{low} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{o}{*}\PYG{p}{(}\PYG{n}{b}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{*}\PYG{n}{n}\PYG{p}{)}
+            \PYG{n}{high} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{o}{*}\PYG{n}{b}\PYG{o}{*}\PYG{n}{n}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{}Generate Mask Array}
+            \PYG{n}{mask} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ones}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{dtype}\PYG{o}{=}\PYG{n+nb}{bool}\PYG{p}{)}
+            \PYG{n}{mask}\PYG{p}{[}\PYG{n}{i}\PYG{p}{:}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{40}\PYG{p}{]} \PYG{o}{=} \PYG{k+kc}{False}
+
+            \PYG{c+c1}{\PYGZsh{}Use Mask to Select Data}
+            \PYG{n}{X\PYGZus{}test\PYGZus{}i} \PYG{o}{=} \PYG{n}{X}\PYG{p}{[}\PYG{o}{\PYGZti{}}\PYG{n}{mask}\PYG{p}{,:]}
+            \PYG{n}{y\PYGZus{}test\PYGZus{}i} \PYG{o}{=} \PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZti{}}\PYG{n}{mask}\PYG{p}{]}
+            \PYG{n}{X\PYGZus{}i} \PYG{o}{=} \PYG{n}{X}\PYG{p}{[}\PYG{n}{mask}\PYG{p}{,:]}
+            \PYG{n}{y\PYGZus{}i} \PYG{o}{=} \PYG{n}{y}\PYG{p}{[}\PYG{n}{mask}\PYG{p}{]}
+
+            \PYG{c+c1}{\PYGZsh{}Compute Errors}
+            \PYG{n}{model} \PYG{o}{=} \PYG{n}{KNN}\PYG{p}{(}\PYG{n}{k} \PYG{o}{=} \PYG{n}{k\PYGZus{}i}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{}Compute train error}
+            \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X\PYGZus{}i}\PYG{p}{,} \PYG{n}{y\PYGZus{}i}\PYG{p}{)}
+            \PYG{n}{y\PYGZus{}hat} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}i}\PYG{p}{)}
+            \PYG{n}{err\PYGZus{}train} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{y\PYGZus{}i} \PYG{o}{!=} \PYG{n}{y\PYGZus{}hat}\PYG{p}{)}
+            \PYG{n}{train}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{b}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{err\PYGZus{}train}
+
+            \PYG{c+c1}{\PYGZsh{} Compute test error}
+            \PYG{n}{y\PYGZus{}hat\PYGZus{}test} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}test\PYGZus{}i}\PYG{p}{)}
+            \PYG{n}{err\PYGZus{}test} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{y\PYGZus{}hat\PYGZus{}test} \PYG{o}{!=} \PYG{n}{y\PYGZus{}test\PYGZus{}i}\PYG{p}{)}
+            \PYG{n}{test}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{b}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{err\PYGZus{}test}
+
+
+        \PYG{n}{result}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{train}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,:])}
+        \PYG{n}{result}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{test}\PYG{p}{[}\PYG{n}{a}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,:])}
+    \PYG{n}{cv\PYGZus{}accs} \PYG{o}{=} \PYG{n}{result}\PYG{p}{[:,}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+\end{Verbatim}

@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X\PYGZus{}hat}\PYG{p}{):}
+    \PYG{n}{n}\PYG{p}{,}\PYG{n}{d} \PYG{o}{=} \PYG{n}{X\PYGZus{}hat}\PYG{o}{.}\PYG{n}{shape}
+    \PYG{n}{y\PYGZus{}hat} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+
+    \PYG{n}{dist} \PYG{o}{=} \PYG{n}{euclidean\PYGZus{}dist\PYGZus{}squared}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{X}\PYG{p}{,} \PYG{n}{X\PYGZus{}hat}\PYG{p}{)}
+
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}
+        \PYG{n}{dist\PYGZus{}x\PYGZus{}hat\PYGZus{}i} \PYG{o}{=} \PYG{n}{dist}\PYG{p}{[:,}\PYG{n}{i}\PYG{p}{]}
+        \PYG{n}{order} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{argsort}\PYG{p}{(}\PYG{n}{dist\PYGZus{}x\PYGZus{}hat\PYGZus{}i}\PYG{p}{)}
+        \PYG{n}{select} \PYG{o}{=} \PYG{n}{order}\PYG{p}{[:}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{k}\PYG{p}{]}
+        \PYG{n}{KNN\PYGZus{}i} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{select}\PYG{p}{]}
+        \PYG{n}{y\PYGZus{}hat}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{mode}\PYG{p}{(}\PYG{n}{KNN\PYGZus{}i}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{y\PYGZus{}hat}
+
+\end{Verbatim}

@@ -20,20 +20,19 @@ class NaiveBayes:
         # Compute the number of class labels
         k = self.num_classes
 
-        # Compute the probability of each class i.e p(y==c), aka "baseline -ness"
+        # Compute the probability of y
         counts = np.bincount(y)
         p_y = counts / n
 
-        """YOUR CODE HERE FOR Q3.3"""
-
-        # Compute the conditional probabilities i.e.
-        # p(x_ij=1 | y_i==c) as p_xy[j, c]
-        # p(x_ij=0 | y_i==c) as 1 - p_xy[j, c]
-        p_xy = 0.5 * np.ones((d, k))
-        # TODO: replace the above line with the proper code
-        pass
-
-
+        #Compute the conditional probabilities 
+        p_xy = np.zeros((d,k))
+        for j in range(k):
+            mask_j = np.where(y == j , True , False)
+            X_j = X[mask_j]
+            for i in range(d):
+                p_xy[i,j] = np.mean(X_j[:,i]) 
+        count = np.count_nonzero(p_xy[:,0])
+        print(count)
         self.p_y = p_y
         self.p_xy = p_xy
 
@@ -63,9 +62,25 @@ class NaiveBayesLaplace(NaiveBayes):
         super().__init__(num_classes)
         self.beta = beta
 
-    def fit(self, X, y):
-        """YOUR CODE FOR Q3.4"""
-        raise NotImplementedError()
+    def fit(self, X, y, beta):
+        n, d = X.shape
+
+        # Compute the number of class labels
+        k = self.num_classes
+
+        # Compute the probability of y
+        counts = np.bincount(y)
+        p_y = counts / n
+
+        #Compute the conditional probabilities 
+        p_xy = np.zeros((d,k))
+        for j in range(k):
+            mask_j = np.where(y == j , True , False)
+            X_j = X[mask_j]
+            for i in range(d):
+                p_xy[i,j] = (np.count_nonzero(X_j[:,i]) + beta)/(np.count_nonzero(mask_j) + k*beta)
+        count = np.count_nonzero(p_xy[:,0])
+        print(count)
 
 
         self.p_y = p_y
