@@ -14,8 +14,10 @@ class LeastSquares:
 # Least squares where each sample point X has a weight associated with it.
 class WeightedLeastSquares(LeastSquares):  # inherits the predict() function from LeastSquares
     def fit(self, X, y, v):
-        """YOUR CODE HERE FOR Q2.1"""
-        raise NotImplementedError()
+        self.w = solve(X.T @ v @ X, X.T @ v @ y)
+
+
+    
 
 
 class LinearModelGradientDescent:
@@ -106,12 +108,18 @@ class LinearModelGradientDescent:
 class LeastSquaresBias:
     "Least Squares with a bias added"
     def fit(self, X, y):
-        """YOUR CODE HERE FOR Q3.1"""
-        raise NotImplementedError()
+        n,d = X.shape
+        one = np.ones((n,1))
+        X_reg = np.append(one, X, axis=1)
+        LeastSquares.fit(self, X_reg, y)
 
     def predict(self, X_pred):
-        """YOUR CODE HERE FOR Q3.1"""
-        raise NotImplementedError()
+        n,d = X_pred.shape
+        one = np.ones((n,1))
+        X_reg = np.append(one, X_pred, axis=1)
+        y_pred= LeastSquares.predict(self,X_reg)
+
+        return y_pred
 
 
 class LeastSquaresPoly:
@@ -121,16 +129,26 @@ class LeastSquaresPoly:
         self.p = p
 
     def fit(self, X, y):
-        """YOUR CODE HERE FOR Q3.2"""
-        raise NotImplementedError()
+        X_reg = LeastSquaresPoly._poly_basis(self, X)
+        LeastSquares.fit(self, X_reg, y)
+
 
     def predict(self, X_pred):
-        """YOUR CODE HERE FOR Q3.2"""
-        raise NotImplementedError()
+        X_reg = LeastSquaresPoly._poly_basis(self, X_pred)
+
+        y_pred= LeastSquares.predict(self,X_reg)
+
+        return y_pred
 
     # A private helper function to transform any X with d=1 into
     # the polynomial basis defined by this class at initialization.
     # Returns the matrix Z that is the polynomial basis of X.
     def _poly_basis(self, X):
-        """YOUR CODE HERE FOR Q3.2"""
-        raise NotImplementedError()
+        n,d = X.shape
+        Z_old = np.ones((n,1))
+        Z_new = Z_old
+        for i in range(self.p):
+            Z_new = np.append(Z_old, np.power(X,i+1),axis = 1)
+            Z_old = Z_new
+        self.Z = Z_new
+        return self.Z

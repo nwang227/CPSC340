@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize.optimize import approx_fprime
-
+import math
 from utils import ensure_1d
 
 """
@@ -84,5 +84,16 @@ class FunObjRobustRegression(FunObj):
         w = ensure_1d(w)
         y = ensure_1d(y)
 
-        """YOUR CODE HERE FOR Q2.3"""
-        raise NotImplementedError()
+        n,d = X.shape
+        f = 0
+        g = 0
+
+        for i in range(n):
+            yi = y[i]
+            xi = X[i]
+            yi_hat = xi @ w
+            residual = yi_hat - yi
+            f += math.log(math.exp(residual) + math.exp(-residual))
+            g += xi * (math.exp(2*yi_hat) - math.exp(2*yi))/(math.exp(2*yi_hat) + math.exp(2*yi))
+
+        return f,g 

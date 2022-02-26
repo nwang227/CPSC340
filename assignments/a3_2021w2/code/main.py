@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+from cProfile import label
 import os
 from pathlib import Path
 import pickle
@@ -70,9 +71,17 @@ def q2_1():
     data = load_dataset("outliersData.pkl")
     X = data["X"]
     y = data["y"].squeeze(1)
+    vi = np.ones(500)
+    vi[400:] = 0.1
+    v = np.diag(vi)
 
-    """YOUR CODE FOR Q2.1"""
-    raise NotImplementedError()
+    model = linear_models.WeightedLeastSquares()
+    model.fit(X, y, v)
+    print(model.w)
+
+    utils.test_and_plot(
+        model, X, y, title="Weighted Least Squares", filename="Weighted_least_squares_outliers.pdf"
+    )
 
 
 @handle("2.4")
@@ -103,9 +112,20 @@ def q2_4_1():
     X = data["X"]
     y = data["y"].squeeze(1)
 
-    """YOUR CODE HERE FOR Q2.4.1"""
-    # TODO: Finish FunObjRobustRegression in fun_obj.py.
-    raise NotImplementedError()
+    fun_obj = FunObjRobustRegression()
+    optimizer = OptimizerGradientDescentLineSearch(max_evals=100, verbose=False)
+    model = linear_models.LinearModelGradientDescent(fun_obj, optimizer)
+    model.fit(X, y)
+    print(model.w)
+
+    utils.test_and_plot(
+        model,
+        X,
+        y,
+        title="Linear Regression with Gradient Descent(smooth approximation)",
+        filename="least_squares_robust.pdf",
+    )
+
 
 
 @handle("2.4.2")
@@ -123,8 +143,27 @@ def q2_4_2():
     optimizer = OptimizerGradientDescent(max_evals=100, verbose=False)
     model = linear_models.LinearModelGradientDescent(fun_obj, optimizer)
     model.fit(X, y)
-    """YOUR CODE HERE FOR Q2.4.2"""
-    raise NotImplementedError()
+
+    f_GD = np.asarray(model.fs)
+
+
+    optimizer2 = OptimizerGradientDescentLineSearch(max_evals=100, verbose=False)
+    model2 = linear_models.LinearModelGradientDescent(fun_obj, optimizer2)
+    model2.fit(X,y)
+
+    f_LS = np.asarray(model2.fs)
+
+
+    plt.plot(f_GD, label = "Gradient Descent")
+    plt.plot(f_LS, label = "Line Search")
+    plt.title("Learning Curve")
+    plt.legend()
+    plt.xlabel("Iteration")
+    plt.ylabel("Objective Function Value")
+    fname = Path("..", "figs","LearningCurve.pdf")
+    plt.savefig(fname)
+
+
 
 
 @handle("3")
@@ -227,6 +266,8 @@ def q3_2():
     filename = Path("..", "figs", "polynomial_error_curves.pdf")
     print("Saving to", filename)
     plt.savefig(filename)
+
+q3_2()
 
 
 if __name__ == "__main__":

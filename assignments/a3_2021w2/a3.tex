@@ -78,14 +78,26 @@ Using our standard supervised learning notation ($X$, $y$, $w$)
 \item $\max_{i \in \{1,2,\dots,n\}}  |w^Tx_i - y_i|$. This is ``brittle regression''.
 \begin{answer}
 	\begin{equation}
-		\text{Let} r = | X w - y |
+		\text{Let} \quad r = | X w - y |
 	\end{equation}
-	Then the funciton can be expressed as $\max_i$
+	Then the funciton can be expressed as $\max_i r_i$
 \end{answer}
 \item $\sum_{i=1}^n v_i(w^Tx_i  - y_i)^2 + \frac{\lambda}{2}\sum_{j=1}^d w_j^2$. This is regularized least squares with a \emph{weight} $v_i$ for each training example:  Hint: You can use $V$ to denote a diagonal matrix that has the values $v_i$ along the diagonal. What does $a^T V b$ look like in summation form (for some arbitrary vectors $a$, $b$)?
-%
+\begin{answer}
+	Let $V$ denote a diagonal matrix with values $v_{i}$.
+	\begin{equation}
+		(X w - y)^{T} V (X w - y) + \frac{\lambda}{2} w^{T} w
+	\end{equation}
+\end{answer}
+
 \item $\left(\sum_{i=1}^n |w^Tx_i - y_i|\right)^2 +  \frac12 \sum_{j=1}^{d} \lambda_j|w_j|$. This is L1-regularized least squares with a different regularization strength for each dimension: Hint: You can use  $\Lambda$ to denote a diagonal matrix that has the $\lambda_j$ values along the diagonal.
-%
+\begin{answer}
+	Denote a veter $A = [1,1,....]^{T}$
+	\begin{equation}
+		((X w - y)^{T} A)^2 + |w| \Lambda A
+	\end{equation}
+	
+\end{answer}
 \end{enumerate}
 
 Note: you can assume that all the $v_i$ and $\lambda_i$ values are non-negative.
@@ -96,11 +108,38 @@ Note: you can assume that all the $v_i$ and $\lambda_i$ values are non-negative.
 
 \begin{enumerate}
 \item $f(w) = \frac{1}{2} \norm{w-v}^2$ (projection of $v$ onto real space).
-%
+\begin{answer}
+	$w = v $
+\end{answer}
 \item $f(w)= \frac{1}{2} \norm{Xw - y}^2 + \frac{1}{2} w^T\Lambda w$ (least squares with weighted regularization).
-%
+\begin{answer}
+	\begin{equation}
+		f(w) = \frac{1}{2} w^{T} X^{T} X w - w^{T} X^{T} y + \frac{1}{2} y^{T} y + \frac{1}{2} w^T\Lambda w
+	\end{equation}
+	Therefore,
+	\begin{equation}
+		\nabla f(w) = X^{T} X w - X^{T}y + \Lambda w = 0
+	\end{equation}
+
+	\begin{equation}
+		\Rightarrow w = (X^{T} X + \Lambda)^{-1} X^{T}y                  
+	\end{equation}
+\end{answer}
+
 \item $f(w) = \frac{1}{2} \sum_{i=1}^n v_i (w^Tx_i - y_i)^2 + \frac{\lambda}{2}\norm{w-w^{(0)}}^2$ (weighted least squares shrunk towards non-zero $w^{(0)}$). \label{item:weighted-shrunk-ls}
-%
+\begin{answer}
+	\begin{equation}
+		f(w) = \frac{1}{2}(w^{T}X^{T}VXw - 2w^{T}X^{T}Vy + y^{T}Vy)+ \lambda (w^{T} w - 2 w^{T} w^{(0)} + {w^{(0)}}^{T} w^{(0)})
+	\end{equation}
+
+	\begin{equation}
+		\nabla f(w) = X^{T}VX w - X^{T}Vy + 2\lambda w - 2\lambda w^{(0)} = 0
+	\end{equation}
+
+	\begin{equation}
+		\Rightarrow w = (X^{T}VX + 2\lambda I)^{-1} (X^{T}Vy + 2\lambda w^{(0)})
+	\end{equation}
+\end{answer}
 \end{enumerate}
 Above we assume that $v$ and $w^{(0)}$ are $d \times 1$ vectors, and $\Lambda$ is a $d \times d$ diagonal matrix (with positive entries along the diagonal). You can use $V$ as a diagonal matrix containing the $v_i$ values along the diagonal.
 
@@ -154,8 +193,16 @@ Complete the model class, \texttt{WeightedLeastSquares} (inside \texttt{linear\_
 Apply this model to the data containing outliers, setting $v = 1$ for the first
 $400$ data points and $v = 0.1$ for the last $100$ data points (which are the outliers).
 \ask{Hand in your code and the updated plot}.
+\begin{minted}{python}
+class WeightedLeastSquares(LeastSquares):  
+    def fit(self, X, y, v):
+        self.w = solve(X.T @ v @ X, X.T @ v @ y)
+\end{minted}
 
-
+\begin{figure}
+	\centering
+	\includegraphics[width = .7\textwidth]{figs/Weighted_least_squares_outliers.pdf}
+\end{figure}
 
 \subsection{Smooth Approximation to the L1-Norm \pts{8}}
 
@@ -174,7 +221,14 @@ f(w) {=} \sum_{i=1}^n  \log\left(\exp(w^Tx_i - y_i) + \exp(y_i - w^Tx_i)\right).
 which is smooth but less sensitive to outliers than the squared error. \ask{Derive
  the gradient $\nabla f$ of this function with respect to $w$. You should show your work but you do \underline{not} have to express the final result in matrix notation.}
 
-%
+\begin{answer}
+	\begin{equation}
+		\begin{split}
+			\nabla f(w) &= \sum_i^n \frac{x_i(exp(w^{T}x_i - y_i)- exp(y_i - w^{T}x_i)}{\exp(w^Tx_i - y_i) + \exp(y_i - w^Tx_i)} \\
+			&= \sum_i^n \frac{x_i(exp(2w^{T}x_i)- exp(2y_i))}{exp(2w^{T}x_i) + exp(2y_i)}
+		\end{split}
+	\end{equation}
+\end{answer}
 
 \subsection{Gradient Descent: Understanding the Code \pts{5}}
 
@@ -186,13 +240,21 @@ Recall gradient descent, a derivative-based optimization algorithm that uses gra
 Look at the methods named \texttt{get\_learning\_rate\_and\_step()} and \texttt{break\_yes()}, and \ask{answer each of these questions, one sentence per answer:}
 \begin{enumerate}
 	\item Which variable is equivalent to $\alpha^t$, the step size at iteration $t$?
-	%
+	\begin{answer}
+		The variable \texttt{alpha} or \texttt{learning\_rate} is equivalent to the step size
+	\end{answer}
 	\item Which variable is equivalent to $\nabla_w f(w^t)$ the current value of the gradient vector?
-	%
+	\begin{answer}
+		\texttt{g\_new} is the current gradient vector
+	\end{answer}
 	\item Which variable is equivalent to $w^t$, the current value of the parameters?
-	%
+	\begin{answer}
+		\texttt{w\_new} is the current parameter
+	\end{answer}
 	\item What is the method \texttt{break\_yes()} doing?
-	%
+	\begin{answer}
+		It tells whether the iteration should stop based on the current gradient and the maximum number of iterations
+	\end{answer}
 \end{enumerate}
 
 
@@ -215,16 +277,53 @@ Optimizing robust regression parameters is the matter of implementing a function
 \ask{Inside \texttt{fun\_obj.py}, complete \texttt{FunObjRobustRegression} to implement the objective function and gradient based on the smooth
 approximation to the absolute value function (from the previous section). Hand in your code, as well
 as the plot obtained using this robust regression approach.}
+\begin{minted}{python}
+	class FunObjRobustRegression(FunObj):
+		def evaluate(self, w, X, y):
+			#Need to use log and exp funtion 
+			import math
+
+			# help avoid mistakes (as described in the assignment) by
+			# potentially reshaping our arguments
+			w = ensure_1d(w)
+			y = ensure_1d(y)
 
 
+			#Define results
+			n,d = X.shape
+			f = 0
+			g = 0
 
+			#Use loop to compute the sumation results
+			for i in range(n):
+				yi = y[i]
+				xi = X[i]
+				yi_hat = xi @ w
+				residual = yi_hat - yi
+				f += math.log(math.exp(residual) + math.exp(-residual))
+				g += xi * (math.exp(2*yi_hat) - math.exp(2*yi))/(math.exp(2*yi_hat) + math.exp(2*yi))
+
+			return f,g 
+	\end{minted}
+
+
+	\begin{figure}
+		\centering
+		\includegraphics[width = .7\textwidth]{figs/least_squares_robust.pdf}
+	\end{figure}
 
 \subsubsection{The Learning Curves \pts{5}}
 
 Using the same dataset as the previous sections, produce the plot of ``gradient descent learning curves'' to compare the performances of \texttt{OptimizerGradientDescent} and \texttt{OptimizerGradientDescentLineSearch} for robust regression, where \textbf{one hundred (100) iterations} of gradient descent are on the x-axis and the \textbf{objective function value} corresponding to each iteration is visualized on the y-axis (see gradient descent lecture). Use the default \texttt{learning\_rate} for \texttt{OptimizerGradientDescent}. \ask{Submit this plot. According to this plot, which optimizer is more ``iteration-efficient''?}
 
-%
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.7\textwidth]{figs/LearningCurve.pdf}
+\end{figure}
 
+\begin{answer}
+	From the graph, the normal gradient descent optimizer arrives around the minimum value after 40 iterations. However, since the iteration didn't stop, the objective funciton can still be minimized. However, the line search optimizer arrives at the minimum value and stopped accroding to our tolerance with 4 iterations. It's clear that the line search optimizer is more efficient in terms of iterations.
+\end{answer}
 \clearpage
 \section{Linear Regression and Nonlinear Bases}
 
@@ -271,7 +370,27 @@ and the updated training/validation error.}
 
 Hint: recall that adding a bias $w_0$ is equivalent to adding a column of ones to the matrix $X$. Don't forget that you need to do the same transformation in the \texttt{predict} function.
 
-%
+\begin{minted}{python}
+class LeastSquaresBias:
+    def fit(self, X, y):
+        n,d = X.shape
+        one = np.ones((n,1))
+        X_reg = np.append(one, X, axis=1)
+        LeastSquares.fit(self, X_reg, y)
+
+    def predict(self, X_pred):
+        n,d = X_pred.shape
+        one = np.ones((n,1))
+        X_reg = np.append(one, X_pred, axis=1)
+        y_pred= LeastSquares.predict(self,X_reg)
+
+        return y_pred
+\end{minted}
+
+\begin{figure}
+	\centering
+	\includegraphics[width = .7\textwidth]{figs/least_squares_yes_bias.pdf}
+\end{figure}
 
 \subsection{Polynomial Basis \pts{10}}
 
@@ -295,9 +414,46 @@ NOTE: large values of $p$ may cause numerical instability. Your solution may loo
 Note: you should write the code yourself; don't use a library like sklearn's \texttt{PolynomialFeatures}.
 
 Note: in addition to the error curves, the code also produces a plot of the fits themselves. This is for your information; you don't have to submit it.
+\begin{answer}
+	It can be seen from the figure that, with the increasing of the degree of polinomial, the traning error and validation error are decreasing at the same time at the beginning. However, after 10th degree, the validation error starts to increase dramatically, while the training error is still slowly decreasing. 
+
+	The reason behind the increase of validation error is overfitting into the training data. As $p$ increase, the fitted value is getting more and more closer to the real value during the training. Therefore, it more precisely captures the trend of the training data. This leads to overfitting issue when we use the testing data, and thus cause the validation error to increase.
+\end{answer}
+
+\begin{minted}{python}
+	class LeastSquaresPoly:
+		def __init__(self, p):
+			self.leastSquares = LeastSquares()
+			self.p = p
+
+		def fit(self, X, y):
+			X_reg = LeastSquaresPoly._poly_basis(self, X)
+			LeastSquares.fit(self, X_reg, y)
 
 
+		def predict(self, X_pred):
+			X_reg = LeastSquaresPoly._poly_basis(self, X_pred)
 
+			y_pred= LeastSquares.predict(self,X_reg)
+
+			return y_pred
+
+		#Define the polynomial basis
+		def _poly_basis(self, X):
+			n,d = X.shape
+			Z_old = np.ones((n,1))
+			Z_new = Z_old
+			for i in range(self.p):
+				Z_new = np.append(Z_old, np.power(X,i+1),axis = 1)
+				Z_old = Z_new
+			self.Z = Z_new
+			return self.Z
+\end{minted}
+
+\begin{figure}
+	\centering
+	\includegraphics[width = .7\textwidth]{figs/polynomial_error_curves.pdf}
+\end{figure}
 
 \clearpage
 \section{Very-Short Answer Questions \pts{24}}
@@ -306,29 +462,56 @@ Note: in addition to the error curves, the code also produces a plot of the fits
 
 \begin{enumerate}
 \item Suppose that a training example is global outlier, meaning it is really far from all other data points. How is the cluster assignment of this example set by $k$-means? And how is it set by density-based clustering?
+\begin{answer}
+	K-mean method would classify it as the nearest cluster, while the density-based clustering would set itself as a new group.
+\end{answer}
 %
-\item Why do need random restarts for $k$-means but not for density-based clustering?
-%
+\item Why do we need random restarts for $k$-means but not for density-based clustering?
+\begin{answer}
+	Because the $k$-mean can potentially gives different results according to different starting points, while the density-based clustering would always give the same result.
+
+\end{answer}
 \item Can hierarchical clustering find non-convex clusters?
-%
+\begin{answer}
+	It can, since it's essentially density-based clustering
+\end{answer}
 \item For model-based outlier detection, list an example method and problem with identifying outliers using this method.
-%
+\begin{answer}
+	We can assume that the data follows a normal distribution and select outlier based on the probability. However, it can be problematic if the data is not normally distributed. For example, the data can be uniformally distributed 
+\end{answer}
 \item For graphical-based outlier detection, list an example method and problem with identifying outliers using this method.
-%
+\begin{answer}
+	We could plot the data as a scatter plot, and detect outliers by personal observation. But sometimes it can be hard to tell which points are outliers just based on observation, especially when the data itself is distributed sparsely. 
+\end{answer}
 \item For supervised outlier detection, list an example method and problem with identifying outliers using this method.
-%
+\begin{answer}
+	If we have a dataset including a variable identifying whether this entry is an outlier, then we can use supervised learning to detect other outlier in other dataset. However, normally we don't have that kind of data. Moreover, the pattern of outliers can be different, so we can end up with a high testing error.
+\end{answer}
 \item If we want to do linear regression with 1 feature, explain why it would or would not make sense to use gradient descent to compute the least squares solution.
-%
+\begin{answer}
+	Still we can use gradient descent, but a closed-form solution can be more computational efficient/
+\end{answer}
 \item Why do we typically add a column of $1$ values to $X$ when we do linear regression? Should we do this if we're using decision trees?
-%
+\begin{answer}
+	Because normally we could expect the intercept of fitted value to be non-zero.
+\end{answer}
 \item Why do we need gradient descent for the robust regression problem, as opposed to just using the normal equations? Hint: it is NOT because of the non-differentiability. Recall that we used gradient descent even after smoothing away the non-differentiable part of the loss.
+\begin{answer}
+	Firstly, normal equation can only solve linear problems. Secondly, gradient descent potentially is computational efficient.
+\end{answer}
 %
 \item What is the problem with having too small of a learning rate in gradient descent? What is the problem with having too large of a learning rate in gradient descent?
-%
+\begin{answer}
+	It would cost more iterations to find the optimal with too small a learning rate. While it may not coverge if the learning rate is too large.
+\end{answer}
 \item What is the purpose of the log-sum-exp function and how is this related to gradient descent?
-%
+\begin{answer}
+	It smoothes the objective function so that we can find the gradient.
+\end{answer}
 \item What type of non-linear transform might be suitable if we had a periodic function?
-%
+\begin{answer}
+	We can use trigonometric functions like sines and cosines.
+\end{answer}
 \end{enumerate}
 
 \end{document}

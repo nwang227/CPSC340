@@ -1,0 +1,29 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{LeastSquaresPoly}\PYG{p}{:}
+	\PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{p}\PYG{p}{):}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{leastSquares} \PYG{o}{=} \PYG{n}{LeastSquares}\PYG{p}{()}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{p} \PYG{o}{=} \PYG{n}{p}
+
+	\PYG{k}{def} \PYG{n+nf}{fit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+		\PYG{n}{X\PYGZus{}reg} \PYG{o}{=} \PYG{n}{LeastSquaresPoly}\PYG{o}{.}\PYG{n}{\PYGZus{}poly\PYGZus{}basis}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{)}
+		\PYG{n}{LeastSquares}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X\PYGZus{}reg}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+
+
+	\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X\PYGZus{}pred}\PYG{p}{):}
+		\PYG{n}{X\PYGZus{}reg} \PYG{o}{=} \PYG{n}{LeastSquaresPoly}\PYG{o}{.}\PYG{n}{\PYGZus{}poly\PYGZus{}basis}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X\PYGZus{}pred}\PYG{p}{)}
+
+		\PYG{n}{y\PYGZus{}pred}\PYG{o}{=} \PYG{n}{LeastSquares}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}\PYG{n}{X\PYGZus{}reg}\PYG{p}{)}
+
+		\PYG{k}{return} \PYG{n}{y\PYGZus{}pred}
+
+	\PYG{c+c1}{\PYGZsh{}Define the polynomial basis}
+	\PYG{k}{def} \PYG{n+nf}{\PYGZus{}poly\PYGZus{}basis}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{):}
+		\PYG{n}{n}\PYG{p}{,}\PYG{n}{d} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}
+		\PYG{n}{Z\PYGZus{}old} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ones}\PYG{p}{((}\PYG{n}{n}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{))}
+		\PYG{n}{Z\PYGZus{}new} \PYG{o}{=} \PYG{n}{Z\PYGZus{}old}
+		\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{p}\PYG{p}{):}
+			\PYG{n}{Z\PYGZus{}new} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{Z\PYGZus{}old}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{power}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{),}\PYG{n}{axis} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{)}
+			\PYG{n}{Z\PYGZus{}old} \PYG{o}{=} \PYG{n}{Z\PYGZus{}new}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Z} \PYG{o}{=} \PYG{n}{Z\PYGZus{}new}
+		\PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Z}
+\end{Verbatim}
