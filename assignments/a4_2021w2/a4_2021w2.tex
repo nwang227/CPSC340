@@ -58,6 +58,7 @@
 
 \title{CPSC 340 Assignment 4 (Due Friday 2022-03-11 at 11:59pm)}
 \date{}
+\author{Nan Wang \ (30566426) and Nicolas Wesseler \ (29931623)}
 \maketitle
 
 \vspace{-4em}
@@ -77,16 +78,35 @@ Recall that convex loss functions are typically easier to minimize than non-conv
 
 \begin{enumerate}
 \item $f(w) = \alpha w^2 - \beta w + \gamma$ with $w \in \R, \alpha \geq 0, \beta \in \R, \gamma \in \R$ (1D quadratic).
-
+\begin{answer}
+    $\frac{\partial^{2} f(w)}{\partial^2 w} = 2 \alpha \geq 0 $
+\end{answer}
 \item $f(w) = -\log(\alpha w) $ with $\alpha > 0$ and $w > 0$ (``negative logarithm'')
-
+\begin{answer}
+    $\frac{\partial^{2} f(w)}{\partial^2 w} = \frac{1}{w^2} > 0 $
+\end{answer}
 \item $f(w) = \norm{Xw-y}_1 + \frac{\lambda}{2}\norm{w}_1$ with $w \in \R^d, \lambda \geq 0$ (L1-regularized robust regression).
-
+\begin{answer}
+    The second term is convex since it consists of a norm (which is convex) and $\lambda \geq 0$. The first term is convex since it's
+    the norm of an affine function. A sum of two convex functions is always a convex function too so the whole term is convex.
+\end{answer}
 \item $f(w) = \sum_{i=1}^n \log(1+\exp(-y_iw^Tx_i)) $ with $w \in \R^d$ (logistic regression).
+\begin{answer}
+    Obviously the function inside the $exp$ function is linear. Let's call it z. Then we need to show that $\log(1+\exp(z))$ is convex.
+    \[
+        \frac{\partial^{2} f(z)}{\partial^2 z} = \frac{1}{1+\exp(-z)}\frac{\exp(-z)}{1+\exp(-z)},
+\] 
 
+Therefore the function is convex and hence the whole expression is convex as it consists of sums of convex functions.
+\end{answer}
 \item $f(w) = \sum_{i=1}^n[\max\{0,|w^Tx_i - y_i|\} - \epsilon] + \frac{\lambda}{2}\norm{w}_2^2$  with $w \in \R^d, \epsilon \geq 0, \lambda \geq 0$ (support vector regression).
-\end{enumerate}
 
+\begin{answer}
+    Obviously $w^Tx_i - y_i$ is linear. Also the absolute value of a linear function is convex. $\epsilon \geq 0$ so it's convex just like 0 itself. 
+    A max is also convex when it's of convex functions. Lastly, the squared norm is convex and $\lambda \geq 0$. A sum of convex functions is convex.
+    Thus it's overall convex.  
+\end{answer}
+\end{enumerate}
 General hint: for the first two you can check that the second derivative is non-negative since they are one-dimensional. For the last 3, it's easier to use some of the results regarding how combining convex functions can yield convex functions; which can be found in the lecture slides.
 
 Hint for part 4 (logistic regression): this function may at first seem non-convex since it contains $\log(z)$ and $\log$ is concave, but note that $\log(\exp(z))=z$ is convex despite containing a $\log$. To show convexity, you can reduce the problem to showing that $\log(1+\exp(z))$ is convex, which can be done by computing the second derivative. It may simplify matters to note that $\frac{\exp(z)}{1+\exp(z)} = \frac{1}{1+\exp(-z)}$.
@@ -127,6 +147,39 @@ f(w) = \sum_{i=1}^n \left[\log(1+\exp(-y_iw^Tx_i))\right] + \frac{\lambda}{2}\no
 \]
 and its gradient.
 \ask{Submit your function object code. Using this new code with $\lambda = 1$, report how the following quantities change: (1) the training (classification) error, (2) the validation (classification) error, (3) the number of features used, and (4) the number of gradient descent iterations.}
+
+\begin{minted}{python}
+
+class LogisticRegressionLossL2(LogisticRegressionLoss):
+    def __init__(self, lammy):
+        super().__init__()
+        self.lammy = lammy
+
+    def evaluate(self, w, X, y):
+        w = ensure_1d(w)
+        y = ensure_1d(y)
+
+        """YOUR CODE HERE FOR Q2.1"""
+        Xw = X @ w
+        yXw = y * Xw 
+
+        # Calculate the function value
+
+        f = np.sum(np.log(1 + np.exp(-yXw))) + 0.5 * self.lammy * np.sum(w ** 2)
+
+        # Calculate the gradient value
+        s = -y / (1 + np.exp(yXw))
+        g = X.T @ s + self.lammy * w
+
+        return f, g
+    
+\end{minted}
+
+\begin{answer}
+    
+
+Training error goes from 0 to 0.002. Validation error decreases to 0.074 and gradient descent iterations drops to 30. Number of features stays the same.
+\end{answer}
 
 Note: as you may have noticed, \verb|lambda| is a special keyword in Python, so we can't use it as a variable name.
 Some alternative options:
@@ -200,8 +253,41 @@ the optimizer handles that itself.
 
 \begin{asking}Write and submit code to instantiate \verb|LogRegClassifier| with the correct function object and optimizer for L1-regularization. Using this linear model, obtain solutions for L1-regularized logistic regression with $\lambda = 0.01$, $\lambda = 0.1$, $\lambda = 1$, $\lambda = 10$. Report the following quantities per each value of $\lambda$: (1) the training error, (2) the validation error, (3) the number of features used, and (4) the number of gradient descent iterations.\end{asking}
 
+\begin{minted}{python}
 
+@handle("2.2")
+def q2_2():
+    data = utils.load_dataset("logisticData")
+    X, y = data["X"], data["y"]
+    X_valid, y_valid = data["Xvalid"], data["yvalid"]
 
+    """YOUR CODE HERE FOR Q2.2"""
+    set = np.array([0.01, 0.1, 1, 10])
+
+    for lammy in set:
+        fun_obj = LogisticRegressionLoss()
+        optimizer = GradientDescentLineSearchProxL1(lammy, max_evals=400, verbose=False)
+        model = linear_models.LogRegClassifier(fun_obj, optimizer)
+        model.fit(X,y)
+
+        train_err = utils.classification_error(model.predict(X), y)
+        print(f"LogReg Training error: {train_err:.3f}")
+
+        val_err = utils.classification_error(model.predict(X_valid), y_valid)
+        print(f"LogReg Validation error: {val_err:.3f}")
+
+        print(f"# nonZeros: {np.sum(model.w != 0)}")
+        print(f"# function evals: {optimizer.num_evals}")
+    
+\end{minted}
+
+\begin{answer}
+
+    $lambda = 0.01$: Training error: 0.000, validation error: 0.072, features: 88, iterations: 155 \\
+    $lambda = 0.10$: Training error: 0.000, validation error: 0.060, features: 81, iterations: 236 \\
+    $lambda = 1.00$: Training error: 0.000, validation error: 0.052, features: 71, iterations: 107 \\
+    $lambda = 10.0$: Training error: 0.050, validation error: 0.090, features: 29, iterations: 14 \\
+\end{answer}
 
 \subsection{L0-Regularization \pts{8}}
 
@@ -221,6 +307,28 @@ as well as \verb|self.total_evals|.
 \ask{Hand in your updated code. Using this new code with $\lambda=1$,
 report the training error, validation error, number of features selected, and total optimization steps.}
 
+\begin{minted}{python}
+ """YOUR CODE HERE FOR Q2.3"""
+    # TODO: Fit the model with 'j' added to the features,
+    # then compute the loss and update the min_loss/best_feature.
+    # Also update self.total_evals.
+
+    selected_new = X[:, list(selected_with_j)]
+    a, b = selected_new.shape
+    w = np.zeros(b)
+    w, fs, gs, ws = self.optimize(w, selected_new, y)
+    f, g = self.global_loss_fn.evaluate(w, selected_new, y)
+    if f < min_loss:
+        min_loss = f
+        best_feature = j
+    
+selected[best_feature] = True
+\end{minted}
+
+\begin{answer}
+    Training error: 0.000, validation error: 0.042, features: 24, optimization steps: 342.
+\end{answer}
+
 Note that the code differs slightly from what we discussed in class,
 since we're hard-coding that we include the first (bias) variable.
 Also, note that for this particular case using the L0-norm with $\lambda=1$
@@ -235,7 +343,10 @@ In a short paragraph, briefly discuss your results from the above. How do the
 different forms of regularization compare with each other?
 Can you provide some intuition for your results? No need to write a long essay, please!
 
-
+\begin{answer}
+    These questions are all about the sparsity. While we do not have any sparsity under L2, L1 does have some sparsity and L0 the most. 
+    L0 has the slowest algorithm, although it works best in terms of overfitting (has the lowest validation error). 
+\end{answer}
 
 \subsection{L$\frac12$ regularization \pts{8}}
 
@@ -254,14 +365,38 @@ where our 2 data points are $(x_1,y_1)=(1,2)$ and $(x_2,y_2)=(0,1)$.
 
 \begin{enumerate}
 \item \ask{Plug in the dataset values and write the loss in a simplified form, without a $\sum$.}
+\begin{answer}
+    $\frac{1}{2} (w-2)^2  + \lambda \sqrt{|w|}$
+\end{answer}
 \item \ask{If $\lambda=0$, what is the solution, i.e. $\arg \min_w f(w)$?}
+\begin{answer}
+    $w = 2$
+\end{answer}
 \item \ask{If $\lambda\rightarrow \infty$, what is the solution, i.e., $\arg \min_w f(w)$?}
+\begin{answer}
+    $w = 0$
+\end{answer}
 \item \ask{Plot $f(w)$ when $\lambda = 1$. What is $\arg \min_w f(w)$ when $\lambda=1$?} Answer to one decimal place if appropriate. (For the plotting questions, you can use \texttt{matplotlib} or any graphing software, such as \url{https://www.desmos.com}.)
+\centerfig{.7}{./desmos-graph1.png}
+\begin{answer}
+    The solution is around 1.5.
+\end{answer}
 \item \ask{Plot $f(w)$ when $\lambda = 10$. What is $\arg \min_w f(w)$ when $\lambda=10$?} Answer to one decimal place if appropriate.
+\centerfig{.7}{./desmos-graph.png}
+\begin{answer}
+    The solution is at zero.
+\end{answer}
+
 \item \ask{Does L$\frac12$ regularization behave more like L1 regularization or L2 regularization
 when it comes to performing feature selection?} Briefly justify your answer.
+\begin{answer}
+    More like L1 since for high $lambda$ the coefficient is exactly zero.
+\end{answer}
 \item \ask{Is least squares with L$\frac12$ regularization
 a convex optimization problem?} Briefly justify your answer.
+\begin{answer}
+    The $\lambda = 1$ case shows us that it is clearly not convex.
+\end{answer}
 \end{enumerate}
 
 
@@ -300,15 +435,41 @@ W =
 \end{bmatrix}
 \]
 \ask{Under this model, what class label would we assign to the test example? (Show your work.)}
+\begin{answer}
+    
+\[
+w_1^T x = 2 - 1 =  1, \\
+w_2^T x = 2 - 2 =  0, \\
+w_3^T x = 3 - 1 =  2
+\]
 
+We predict 3.
 
-
-
+\end{answer}
 \subsection{One-vs-all Logistic Regression \pts{7}}
 
 Using the squared error on this problem hurts performance because it has ``bad errors'' (the model gets penalized if it classifies examples ``too correctly''). In \verb|linear_models.py|, complete the class named \verb|LogRegClassifierOneVsAll| that replaces the squared loss in the one-vs-all model with the logistic loss. \ask{Hand in the code and report the validation error}.
 
+\begin{minted}{python}
 
+"""YOUR CODE HERE FOR Q3.2"""
+        # NOTE: make sure that you use {-1, 1} labels y for logistic regression,
+        #       not {0, 1} or anything else.
+        for i in range(k):
+            y_inc = y != i
+            y_cor = y == i
+            y_bin = np.zeros(n)
+            y_bin[y_inc] = -1
+            y_bin[y_cor] = 1
+            w = np.zeros(d) 
+            w, fs, gs, ws = self.optimize(w, X, y_bin)
+            W[i, :] = w
+    
+\end{minted}
+
+\begin{answer}
+    Validation error: 0.07
+\end{answer}
 
 \subsection{Softmax Classifier Gradient \pts{7}}
 
@@ -333,6 +494,45 @@ p(y_i=c \mid W, x_i) = \frac{\exp(w_c^Tx_i)}{\sum_{c'=1}^k\exp(w_{c'}^Tx_i)}
 
 \end{itemize}
 
+\begin{answer}
+    To find the partial derivative of $f(W)$ on $W_{cj}$, we can do it by parts.
+    
+    Write
+    \begin{align*}
+        &f(W) = \sum_{i = 1}^n - w_{y_i}^T x_i + \sum_{i = 1}^n log(\sum_{c' = 1}^k exp(w_{c'}^T x_i)) \\
+    \end{align*}
+    Let
+    \begin{align*}
+        &f_1 \equiv \sum_{i = 1}^n - w_{y_i}^T x_i   \\
+        &f_2 \equiv \sum_{i = 1}^n log(\sum_{c' = 1}^k exp(w_{c'}^T x_i))  
+    \end{align*}
+
+    In the first part,
+    \begin{equation*}
+        -w_{y_i}^T x_i = - \sum_{j = 1}^d w_{cj} x_{ij}, \quad \textit{if} \quad y_i = c
+    \end{equation*}
+    Therefore, 
+    \begin{equation*}
+        \frac{\partial f_1 }{\partial W_{cj}} = \sum_{i = 1}^n -x_{ij} \mathbbm{1}(y_i = c)
+    \end{equation*}
+
+    In the second part, $w_{cj}$ appears in every iterations of $i$, but only one iteration of $c'$. 
+    \begin{equation*}
+        f_2 = \sum_{i = 1}^n log( exp(w_{cj} x_{ij} + \sum_{j' \neq j} w_{cj'} x_{ij'})) + \sum_{c' \neq c} exp(w_{c'}^T x_i))  
+    \end{equation*}
+    
+    Applying the chain rule.
+    \begin{equation*}
+        \frac{\partial f_2 }{\partial W_{cj}} = \sum_{i = 1}^n x_{ij} \frac{\exp(w_c^Tx_i)}{\sum_{c'=1}^k\exp(w_{c'}^Tx_i)} = \sum_{i = 1}^n x_{ij} p(y_i=c \mid W, x_i)
+    \end{equation*}
+
+    Altogether,
+    \begin{equation*}
+        \frac{\partial f}{\partial W_{cj}} = \sum_{i=1}^n x_{ij}[p(y_i=c \mid W,x_i) - \mathbbm{1}(y_i = c)] 
+    \end{equation*}
+
+\end{answer}
+
 \subsection{Softmax Classifier Implementation \pts{8}}
 
 Inside \verb|linear_models.py|, you will find the class \verb|MulticlassLogRegClassifier|, which fits $W$ using the softmax loss from the previous section instead of fitting $k$ independent classifiers. As with other linear models, you must implement a function object class in \verb|fun_obj.py|. Find the class named \verb|SoftmaxLoss|. Complete these classes and their methods. \ask{Submit your code and report the validation error.}
@@ -344,6 +544,68 @@ Hint: With softmax classification, our parameters live in a matrix $W$ instead o
 Hint: A na\"ive implementation of \verb|SoftmaxLoss.evaluate()| might involve many for-loops, which is fine as long as the function and gradient calculations are correct. However, this method might take a very long time! This speed bottleneck is one of Python's shortcomings, which can be addressed by employing pre-computing and lots of vectorized operations. However, it can be difficult to convert your written solutions of $f$ and $g$ into vectorized forms, so you should prioritize getting the implementation to work correctly first. One reasonable path is to first make a correct function and gradient implementation with lots of loops, then (if you want) pulling bits out of the loops into meaningful variables, and then thinking about how you can compute each of the variables in a vectorized way. Our solution code doesn't contain any loops, but the solution code for previous instances of the course actually did; it's totally okay for this course to not be allergic to Python \verb|for| loops the way the instructors are.
 
 
+\begin{minted}{python}
+    class MulticlassLogRegClassifier(LogRegClassifier):
+    """
+    LogRegClassifier's extention for multiclass classification.
+    The constructor method and optimize() are inherited, so
+    all you need to implement are fit() and predict() methods.
+    """
+
+    def fit(self, X, y):
+        """YOUR CODE HERE FOR Q3.4"""
+        n, d = X.shape
+        uni = np.unique(y)
+        uni_len = len(uni)
+        w_start = np.zeros(uni_len*d)
+        w, fs, gs, ws = self.optimize(w_start, X, y)
+        W = w.reshape([uni_len, d])
+        self.W = W
+
+    def predict(self, X_hat):
+        """YOUR CODE HERE FOR Q3.4"""
+        return np.argmax(X_hat@self.W.T, axis=1)
+    
+\end{minted}
+
+\begin{minted}{python}
+        """YOUR CODE HERE FOR Q3.4"""
+        # Hint: you may want to use NumPy's reshape() or flatten()
+        # to be consistent with our matrix notation.
+        G = np.zeros([k, d])
+        W = w.reshape(k, d)
+        
+        XW = X @ W.T 
+        exp_XW = np.exp(XW) 
+        all_XW = np.sum(exp_XW, axis=1)  
+        ln_XW = np.log(all_XW)  
+        
+        z = np.zeros([k, n])
+        for j in range(k):
+            for i in range(n):
+                fir = exp_XW[i, j]
+                sec = all_XW[i]
+                z[j, i] = fir / sec 
+
+        f = 0
+        for i in range(n):
+            fir = -XW[i, y[i]]
+            sec = ln_XW[i]
+            f += fir + sec
+
+        for j in range(k):
+            for i in range(d):
+                fir = X[:, i]
+                sec = z[j, :]-(y==j)
+                G[j, i] = np.sum(fir*sec)
+        g = G.reshape(-1)
+        return f, g
+\end{minted}
+
+\begin{answer}
+    Validation error: 0.008
+\end{answer}
+
 \subsection{Comparison with scikit-learn \pts{2}}
 \ask{Compare your results (training error and validation error for both one-vs-all and softmax) with scikit-learn's \texttt{LogisticRegression}},
 which can also handle multi-class problems.
@@ -352,7 +614,30 @@ Since your comparison code above isn't using regularization, set \verb|penalty='
 (Remember that, basically, $C = 1 / \lambda$.)
 Again, set \verb|fit_intercept| to \verb|False| for the same reason as above (there is already a column of $1$'s added to the data set).
 
+\begin{answer}
+    \begin{minted}[]{python}
+def q3_5():
+    from sklearn.linear_model import LogisticRegression
+    data = utils.load_dataset("multiData")
+    X, y = data["X"], data["y"]
+    X_valid, y_valid = data["Xvalid"], data["yvalid"]
 
+   
+    model = LogisticRegression(fit_intercept=False,multi_class='ovr', C = 100)
+    model2 = LogisticRegression(fit_intercept=False,multi_class='multinomial', C = 100)
+    model.fit(X,y)
+    model2.fit(X,y)
+
+    val_err = utils.classification_error(model.predict(X_valid), y_valid)
+    val_err2 = utils.classification_error(model2.predict(X_valid), y_valid)
+    
+    print(f"One-vs-All validation 0-1 error: {val_err:.3f}")
+    print(f"model predicted classes: {np.unique(model.predict(X))}")
+    print(f"SoftmaxLoss validation 0-1 error: {val_err2:.3f}")
+    print(f"model predicted classes: {np.unique(model2.predict(X))}")
+    \end{minted}
+    Scikit-learn's validation error for One-vs-All is 0.07, and is 0.022 for sofemax. Compare with my results, they are all very close, and small. It shows our previous results are reliable.
+\end{answer}
 \subsection{Cost of Multi-Class Logistic Regression \pts{4}}
 
 Assume that we have
@@ -366,7 +651,13 @@ Assume that we have
 Also assume that we take $X$ and form new features $Z$ using Gaussian RBFs as a non-linear feature transformation.
 \begin{enumerate}
 \item \ask{In $O()$ notation, what is the cost of training the softmax classifier with gradient descent?}
+\begin{answer}
+    $O(n^2d + n^2kT)$
+\end{answer}
 \item \ask{What is the cost of classifying the $t$ test examples?}
+\begin{answer}
+    $O(ndt + tnk)$
+\end{answer}
 \end{enumerate}
 Hint: you'll need to take into account the cost of forming the basis at training ($Z$) and test ($\tilde{Z})$ time. It will be helpful to think of the dimensions of all the various matrices.
 
@@ -384,24 +675,43 @@ Hint: you'll need to take into account the cost of forming the basis at training
 \begin{enumerate}
 
 \item Suppose that a client wants you to identify the set of ``relevant'' factors that help prediction. Should you promise them that you can do this?
+\begin{answer}
+    Relevant features could be anything and depend on the specific context and also on the researcher herself and her objective.
+\end{answer}
 
 \item What is a setting where you would use the L1-loss, and what is a setting where you would use L1-regularization?
-
+\begin{answer}
+    I would use the L1 regularization for irrelevant features problems and the L1 loss for outlier problems.
+\end{answer}
 \item Among L0-regularization, L1-regularization, and L2-regularization: which yield convex objectives? Which yield unique solutions? Which yield sparse solutions?
-
+\begin{answer}
+    L0 and L1 are sparse, L1 and L2 are convex and L2 is unique.
+\end{answer}
 \item What is the effect of $\lambda$ in L1-regularization on the sparsity level of the solution? What is the effect of $\lambda$ on the two parts of the fundamental trade-off?
-
+\begin{answer}
+    Higher $\lambda$ yields sparser model, a higher training error and a lower testing error. 
+\end{answer}
 \item Suppose you have a feature selection method that tends not to generate false positives, but has many false negatives (it misses relevant variables). Describe an ensemble method for feature selection that could improve the performance of this method.
-
+\begin{answer}
+    In this case we could use bootstrapping to improve the performance.
+\end{answer}
 \item Suppose a binary classification dataset has 3 features. If this dataset is ``linearly separable'', what does this precisely mean in three-dimensional space?
-
+\begin{answer}
+    In a 3D hyperplane we would have a perfect separation between the two classes. 
+\end{answer}
 \item When searching for a good $w$ for a linear classifier, why do we use the logistic loss instead of just minimizing the number of classification errors?
-
+\begin{answer}
+    Because of non-convexity.
+\end{answer}
 
 \item What is a disadvantage of using the perceptron algorithm to fit a linear classifier?
-
+\begin{answer}
+    It is not possible to obtain the max-margin.
+\end{answer}
 \item How does the hyper-parameter $\sigma$ affect the shape of the Gaussian RBFs bumps? How does it affect the fundamental tradeoff?
-
+\begin{answer}
+    It affects the variance of the bumps. A higher $\sigma$ causes a higher training error but a lower testing error.
+\end{answer}
 \end{enumerate}
 
 

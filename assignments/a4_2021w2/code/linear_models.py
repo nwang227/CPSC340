@@ -89,6 +89,8 @@ class LogRegClassifier(LinearModelGradientDescent):
     function object and optimizer.
     """
 
+  
+
     def predict(self, X):
         return np.sign(X @ self.w)
 
@@ -198,9 +200,16 @@ class LogRegClassifierOneVsAll(LogRegClassifier):
         W = np.zeros([k, d])
 
         """YOUR CODE HERE FOR Q3.2"""
-        # NOTE: make sure that you use {-1, 1} labels y for logistic regression,
-        #       not {0, 1} or anything else.
-        raise NotImplementedError()
+        for c in range(k):
+            ck = y_classes[c]
+            y_yes = y == ck
+            y_no = y!= ck
+            y_bi = np.zeros(n)
+            y_bi[y_yes] = 1
+            y_bi[y_no] = -1
+            w = np.zeros(d)  # initial guess
+            w, fs, gs, ws = self.optimize(w, X, y_bi)
+            W[c, :] = w
 
         self.W = W
 
@@ -216,10 +225,15 @@ class MulticlassLogRegClassifier(LogRegClassifier):
     """
 
     def fit(self, X, y):
-        """YOUR CODE HERE FOR Q3.4"""
-        raise NotImplementedError()
+        n, d = X.shape
+        k = len(np.unique(y))
+        w_init = np.zeros(k*d)
+
+        
+
+        w, fs, gs, ws = self.optimize(w_init, X, y)
+        W = w.reshape([k, d])
         self.W = W
 
     def predict(self, X_hat):
-        """YOUR CODE HERE FOR Q3.4"""
-        raise NotImplementedError()
+        return np.argmax(X_hat@self.W.T, axis=1)

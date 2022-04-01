@@ -1,0 +1,27 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{n+nd}{@handle}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}2.2\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{def} \PYG{n+nf}{q2\PYGZus{}2}\PYG{p}{():}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{load\PYGZus{}dataset}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}logisticData\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}X\PYGZdq{}}\PYG{p}{],} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{X\PYGZus{}valid}\PYG{p}{,} \PYG{n}{y\PYGZus{}valid} \PYG{o}{=} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Xvalid\PYGZdq{}}\PYG{p}{],} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}yvalid\PYGZdq{}}\PYG{p}{]}
+
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}YOUR CODE HERE FOR Q2.2\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n+nb}{set} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([}\PYG{l+m+mf}{0.01}\PYG{p}{,} \PYG{l+m+mf}{0.1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{])}
+
+    \PYG{k}{for} \PYG{n}{lammy} \PYG{o+ow}{in} \PYG{n+nb}{set}\PYG{p}{:}
+        \PYG{n}{fun\PYGZus{}obj} \PYG{o}{=} \PYG{n}{LogisticRegressionLoss}\PYG{p}{()}
+        \PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{GradientDescentLineSearchProxL1}\PYG{p}{(}\PYG{n}{lammy}\PYG{p}{,} \PYG{n}{max\PYGZus{}evals}\PYG{o}{=}\PYG{l+m+mi}{400}\PYG{p}{,} \PYG{n}{verbose}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
+        \PYG{n}{model} \PYG{o}{=} \PYG{n}{linear\PYGZus{}models}\PYG{o}{.}\PYG{n}{LogRegClassifier}\PYG{p}{(}\PYG{n}{fun\PYGZus{}obj}\PYG{p}{,} \PYG{n}{optimizer}\PYG{p}{)}
+        \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}
+
+        \PYG{n}{train\PYGZus{}err} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{classification\PYGZus{}error}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X}\PYG{p}{),} \PYG{n}{y}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}LogReg Training error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{train\PYGZus{}err}\PYG{l+s+si}{:}\PYG{l+s+s2}{.3f}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{n}{val\PYGZus{}err} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{classification\PYGZus{}error}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}valid}\PYG{p}{),} \PYG{n}{y\PYGZus{}valid}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}LogReg Validation error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{val\PYGZus{}err}\PYG{l+s+si}{:}\PYG{l+s+s2}{.3f}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{} nonZeros: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{w} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{} function evals: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{num\PYGZus{}evals}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+
+\end{Verbatim}

@@ -154,7 +154,38 @@ class SoftmaxLoss(FunObj):
         n, d = X.shape
         k = len(np.unique(y))
 
-        """YOUR CODE HERE FOR Q3.4"""
         # Hint: you may want to use NumPy's reshape() or flatten()
         # to be consistent with our matrix notation.
-        raise NotImplementedError()
+        W = w.reshape(k,d)
+        XW = X @ W.T
+        exp_XW = np.exp(XW)
+        sum_exp = np.sum(exp_XW, axis=1)
+        log_sum = np.log(sum_exp)
+
+        f = 0
+        G = np.zeros([k,d])
+        gcj = 0
+        p = np.zeros([k, n]) 
+
+        for c in range(k):
+            for i in range(n):
+                p[c, i] = exp_XW[i, c] / sum_exp[i]
+
+        for i in range(n):
+            c = y[i]
+            f1 = - XW[i,c]
+            f2 = log_sum[i]
+            f += f1 + f2
+        
+        for c in range(k):
+            for j in range(d):
+                left = X[:, j]
+                right = p[c, :] - (y == c)
+                G[c, j] = np.sum(left * right)
+
+        g = G.reshape(-1)
+
+        return f,g
+        
+
+

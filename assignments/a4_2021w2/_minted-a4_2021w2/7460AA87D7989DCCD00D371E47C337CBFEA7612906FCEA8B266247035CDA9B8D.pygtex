@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{q3\PYGZus{}5}\PYG{p}{():}
+    \PYG{k+kn}{from} \PYG{n+nn}{sklearn.linear\PYGZus{}model} \PYG{k+kn}{import} \PYG{n}{LogisticRegression}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{load\PYGZus{}dataset}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}multiData\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}X\PYGZdq{}}\PYG{p}{],} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{X\PYGZus{}valid}\PYG{p}{,} \PYG{n}{y\PYGZus{}valid} \PYG{o}{=} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Xvalid\PYGZdq{}}\PYG{p}{],} \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}yvalid\PYGZdq{}}\PYG{p}{]}
+
+
+    \PYG{n}{model} \PYG{o}{=} \PYG{n}{LogisticRegression}\PYG{p}{(}\PYG{n}{fit\PYGZus{}intercept}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,}\PYG{n}{multi\PYGZus{}class}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ovr\PYGZsq{}}\PYG{p}{,} \PYG{n}{C} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{)}
+    \PYG{n}{model2} \PYG{o}{=} \PYG{n}{LogisticRegression}\PYG{p}{(}\PYG{n}{fit\PYGZus{}intercept}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{,}\PYG{n}{multi\PYGZus{}class}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}multinomial\PYGZsq{}}\PYG{p}{,} \PYG{n}{C} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{)}
+    \PYG{n}{model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}
+    \PYG{n}{model2}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X}\PYG{p}{,}\PYG{n}{y}\PYG{p}{)}
+
+    \PYG{n}{val\PYGZus{}err} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{classification\PYGZus{}error}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}valid}\PYG{p}{),} \PYG{n}{y\PYGZus{}valid}\PYG{p}{)}
+    \PYG{n}{val\PYGZus{}err2} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{classification\PYGZus{}error}\PYG{p}{(}\PYG{n}{model2}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}valid}\PYG{p}{),} \PYG{n}{y\PYGZus{}valid}\PYG{p}{)}
+
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}One\PYGZhy{}vs\PYGZhy{}All validation 0\PYGZhy{}1 error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{val\PYGZus{}err}\PYG{l+s+si}{:}\PYG{l+s+s2}{.3f}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}model predicted classes: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{unique}\PYG{p}{(}\PYG{n}{model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X}\PYG{p}{))}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}SoftmaxLoss validation 0\PYGZhy{}1 error: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{val\PYGZus{}err2}\PYG{l+s+si}{:}\PYG{l+s+s2}{.3f}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}model predicted classes: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{unique}\PYG{p}{(}\PYG{n}{model2}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X}\PYG{p}{))}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

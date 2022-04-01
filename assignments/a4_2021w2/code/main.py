@@ -140,6 +140,7 @@ def q3():
     print(f"model predicted classes: {np.unique(model.predict(X))}")
 
 
+
 @handle("3.2")
 def q3_2():
     data = utils.load_dataset("multiData")
@@ -178,18 +179,30 @@ def q3_4():
     print(f"SoftmaxLoss validation 0-1 error: {val_err:.3f}")
 
     print(f"model predicted classes: {np.unique(model.predict(X))}")
-
+q3_4()
 
 @handle("3.5")
 def q3_5():
     from sklearn.linear_model import LogisticRegression
-
     data = utils.load_dataset("multiData")
     X, y = data["X"], data["y"]
     X_valid, y_valid = data["Xvalid"], data["yvalid"]
 
-    """YOUR CODE HERE FOR Q3.5"""
-    raise NotImplementedError()
+   
+    model = LogisticRegression(fit_intercept=False,multi_class='ovr', C = 100)
+    model2 = LogisticRegression(fit_intercept=False,multi_class='multinomial', C = 100)
+    model.fit(X,y)
+    model2.fit(X,y)
+
+    val_err = utils.classification_error(model.predict(X_valid), y_valid)
+    val_err2 = utils.classification_error(model2.predict(X_valid), y_valid)
+
+    print(f"One-vs-All validation 0-1 error: {val_err:.3f}")
+    print(f"model predicted classes: {np.unique(model.predict(X))}")
+    print(f"SoftmaxLoss validation 0-1 error: {val_err2:.3f}")
+    print(f"model predicted classes: {np.unique(model2.predict(X))}")
+
+
 
 
 if __name__ == "__main__":

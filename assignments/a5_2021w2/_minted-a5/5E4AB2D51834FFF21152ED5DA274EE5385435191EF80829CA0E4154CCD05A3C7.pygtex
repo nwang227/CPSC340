@@ -1,0 +1,60 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{}Find the best parameters	}
+\PYG{n}{best\PYGZus{}train\PYGZus{}err} \PYG{o}{=} \PYG{l+m+mi}{100}
+\PYG{n}{best\PYGZus{}val\PYGZus{}err} \PYG{o}{=} \PYG{l+m+mi}{100}
+\PYG{n}{best\PYGZus{}train\PYGZus{}sigma} \PYG{o}{=} \PYG{n}{sigmas}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{n}{best\PYGZus{}train\PYGZus{}lammy} \PYG{o}{=} \PYG{n}{lammys}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{n}{best\PYGZus{}val\PYGZus{}sigma} \PYG{o}{=} \PYG{n}{sigmas}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{n}{best\PYGZus{}val\PYGZus{}lammy} \PYG{o}{=} \PYG{n}{lammys}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{):}
+	\PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{7}\PYG{p}{):}
+		\PYG{n}{sigma\PYGZus{}i} \PYG{o}{=} \PYG{n}{sigmas}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+		\PYG{n}{lammy\PYGZus{}j} \PYG{o}{=} \PYG{n}{lammys}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+		\PYG{n}{loss\PYGZus{}fn} \PYG{o}{=} \PYG{n}{KernelLogisticRegressionLossL2}\PYG{p}{(}\PYG{n}{lammy\PYGZus{}j}\PYG{p}{)}
+		\PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{GradientDescentLineSearch}\PYG{p}{()}
+		\PYG{n}{kernel} \PYG{o}{=} \PYG{n}{GaussianRBFKernel}\PYG{p}{(}\PYG{n}{sigma\PYGZus{}i}\PYG{p}{)}
+		\PYG{n}{klr\PYGZus{}model} \PYG{o}{=} \PYG{n}{KernelClassifier}\PYG{p}{(}\PYG{n}{loss\PYGZus{}fn}\PYG{p}{,} \PYG{n}{optimizer}\PYG{p}{,} \PYG{n}{kernel}\PYG{p}{)}
+		\PYG{n}{klr\PYGZus{}model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train}\PYG{p}{)}
+
+		\PYG{n}{train\PYGZus{}errs}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{klr\PYGZus{}model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{)} \PYG{o}{!=} \PYG{n}{y\PYGZus{}train}\PYG{p}{)}
+		\PYG{n}{val\PYGZus{}errs}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{klr\PYGZus{}model}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}val}\PYG{p}{)} \PYG{o}{!=} \PYG{n}{y\PYGZus{}val}\PYG{p}{)}
+
+		\PYG{k}{if} \PYG{n}{train\PYGZus{}errs}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}train\PYGZus{}err}\PYG{p}{:}
+			\PYG{n}{best\PYGZus{}train\PYGZus{}err} \PYG{o}{=} \PYG{n}{train\PYGZus{}errs}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]}
+			\PYG{n}{best\PYGZus{}train\PYGZus{}sigma} \PYG{o}{=} \PYG{n}{sigmas}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+			\PYG{n}{best\PYGZus{}train\PYGZus{}lammy} \PYG{o}{=} \PYG{n}{lammys}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+
+		\PYG{k}{if} \PYG{n}{val\PYGZus{}errs}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{best\PYGZus{}val\PYGZus{}err}\PYG{p}{:}
+			\PYG{n}{best\PYGZus{}val\PYGZus{}err} \PYG{o}{=} \PYG{n}{val\PYGZus{}errs}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]}
+			\PYG{n}{best\PYGZus{}val\PYGZus{}sigma} \PYG{o}{=} \PYG{n}{sigmas}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+			\PYG{n}{best\PYGZus{}val\PYGZus{}lammy} \PYG{o}{=} \PYG{n}{lammys}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{}Print the best parameters}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}best training error: }\PYG{l+s+si}{\PYGZob{}:.5f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{best\PYGZus{}train\PYGZus{}err}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}lammy for best training error: }\PYG{l+s+si}{\PYGZob{}:.5f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{best\PYGZus{}train\PYGZus{}lammy}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}sigma for best training error: }\PYG{l+s+si}{\PYGZob{}:.5f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{best\PYGZus{}train\PYGZus{}sigma}\PYG{p}{))}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}best validation error: }\PYG{l+s+si}{\PYGZob{}:.5f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{best\PYGZus{}val\PYGZus{}err}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}lammy for best validation error: }\PYG{l+s+si}{\PYGZob{}:.5f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{best\PYGZus{}val\PYGZus{}lammy}\PYG{p}{))}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}sigma for best validation error: }\PYG{l+s+si}{\PYGZob{}:.5f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{best\PYGZus{}val\PYGZus{}sigma}\PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{}Plot the classification using the best train parameters}
+\PYG{n}{loss\PYGZus{}fn} \PYG{o}{=} \PYG{n}{KernelLogisticRegressionLossL2}\PYG{p}{(}\PYG{n}{best\PYGZus{}train\PYGZus{}lammy}\PYG{p}{)}
+\PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{GradientDescentLineSearch}\PYG{p}{()}
+\PYG{n}{kernel} \PYG{o}{=} \PYG{n}{GaussianRBFKernel}\PYG{p}{(}\PYG{n}{best\PYGZus{}train\PYGZus{}sigma}\PYG{p}{)}
+\PYG{n}{klr\PYGZus{}model} \PYG{o}{=} \PYG{n}{KernelClassifier}\PYG{p}{(}\PYG{n}{loss\PYGZus{}fn}\PYG{p}{,} \PYG{n}{optimizer}\PYG{p}{,} \PYG{n}{kernel}\PYG{p}{)}
+\PYG{n}{klr\PYGZus{}model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train}\PYG{p}{)}
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{plot\PYGZus{}classifier}\PYG{p}{(}\PYG{n}{klr\PYGZus{}model}\PYG{p}{,} \PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train}\PYG{p}{)}
+\PYG{n}{utils}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}best\PYGZus{}train.png\PYGZdq{}}\PYG{p}{,} \PYG{n}{fig}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}Plot the classification using the best validation parameters}
+\PYG{n}{loss\PYGZus{}fn} \PYG{o}{=} \PYG{n}{KernelLogisticRegressionLossL2}\PYG{p}{(}\PYG{n}{best\PYGZus{}val\PYGZus{}lammy}\PYG{p}{)}
+\PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{GradientDescentLineSearch}\PYG{p}{()}
+\PYG{n}{kernel} \PYG{o}{=} \PYG{n}{GaussianRBFKernel}\PYG{p}{(}\PYG{n}{best\PYGZus{}val\PYGZus{}sigma}\PYG{p}{)}
+\PYG{n}{klr\PYGZus{}model} \PYG{o}{=} \PYG{n}{KernelClassifier}\PYG{p}{(}\PYG{n}{loss\PYGZus{}fn}\PYG{p}{,} \PYG{n}{optimizer}\PYG{p}{,} \PYG{n}{kernel}\PYG{p}{)}
+\PYG{n}{klr\PYGZus{}model}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train}\PYG{p}{)}
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{utils}\PYG{o}{.}\PYG{n}{plot\PYGZus{}classifier}\PYG{p}{(}\PYG{n}{klr\PYGZus{}model}\PYG{p}{,} \PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train}\PYG{p}{)}
+\PYG{n}{utils}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}best\PYGZus{}val.png\PYGZdq{}}\PYG{p}{,} \PYG{n}{fig}\PYG{p}{)}
+\end{Verbatim}

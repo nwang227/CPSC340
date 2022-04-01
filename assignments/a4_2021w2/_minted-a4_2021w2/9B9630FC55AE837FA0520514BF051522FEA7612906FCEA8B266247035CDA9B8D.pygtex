@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}YOUR CODE HERE FOR Q3.2\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{c+c1}{\PYGZsh{} NOTE: make sure that you use \PYGZob{}\PYGZhy{}1, 1\PYGZcb{} labels y for logistic regression,}
+        \PYG{c+c1}{\PYGZsh{}       not \PYGZob{}0, 1\PYGZcb{} or anything else.}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{k}\PYG{p}{):}
+            \PYG{n}{y\PYGZus{}inc} \PYG{o}{=} \PYG{n}{y} \PYG{o}{!=} \PYG{n}{i}
+            \PYG{n}{y\PYGZus{}cor} \PYG{o}{=} \PYG{n}{y} \PYG{o}{==} \PYG{n}{i}
+            \PYG{n}{y\PYGZus{}bin} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+            \PYG{n}{y\PYGZus{}bin}\PYG{p}{[}\PYG{n}{y\PYGZus{}inc}\PYG{p}{]} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{y\PYGZus{}bin}\PYG{p}{[}\PYG{n}{y\PYGZus{}cor}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{1}
+            \PYG{n}{w} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{d}\PYG{p}{)}
+            \PYG{n}{w}\PYG{p}{,} \PYG{n}{fs}\PYG{p}{,} \PYG{n}{gs}\PYG{p}{,} \PYG{n}{ws} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{optimize}\PYG{p}{(}\PYG{n}{w}\PYG{p}{,} \PYG{n}{X}\PYG{p}{,} \PYG{n}{y\PYGZus{}bin}\PYG{p}{)}
+            \PYG{n}{W}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{p}{:]} \PYG{o}{=} \PYG{n}{w}
+
+\end{Verbatim}

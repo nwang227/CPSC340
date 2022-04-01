@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+ \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}YOUR CODE HERE FOR Q2.3\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{c+c1}{\PYGZsh{} TODO: Fit the model with \PYGZsq{}j\PYGZsq{} added to the features,}
+    \PYG{c+c1}{\PYGZsh{} then compute the loss and update the min\PYGZus{}loss/best\PYGZus{}feature.}
+    \PYG{c+c1}{\PYGZsh{} Also update self.total\PYGZus{}evals.}
+
+    \PYG{n}{selected\PYGZus{}new} \PYG{o}{=} \PYG{n}{X}\PYG{p}{[:,} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{selected\PYGZus{}with\PYGZus{}j}\PYG{p}{)]}
+    \PYG{n}{a}\PYG{p}{,} \PYG{n}{b} \PYG{o}{=} \PYG{n}{selected\PYGZus{}new}\PYG{o}{.}\PYG{n}{shape}
+    \PYG{n}{w} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{b}\PYG{p}{)}
+    \PYG{n}{w}\PYG{p}{,} \PYG{n}{fs}\PYG{p}{,} \PYG{n}{gs}\PYG{p}{,} \PYG{n}{ws} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{optimize}\PYG{p}{(}\PYG{n}{w}\PYG{p}{,} \PYG{n}{selected\PYGZus{}new}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+    \PYG{n}{f}\PYG{p}{,} \PYG{n}{g} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{global\PYGZus{}loss\PYGZus{}fn}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{w}\PYG{p}{,} \PYG{n}{selected\PYGZus{}new}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{f} \PYG{o}{\PYGZlt{}} \PYG{n}{min\PYGZus{}loss}\PYG{p}{:}
+        \PYG{n}{min\PYGZus{}loss} \PYG{o}{=} \PYG{n}{f}
+        \PYG{n}{best\PYGZus{}feature} \PYG{o}{=} \PYG{n}{j}
+
+\PYG{n}{selected}\PYG{p}{[}\PYG{n}{best\PYGZus{}feature}\PYG{p}{]} \PYG{o}{=} \PYG{k+kc}{True}
+\end{Verbatim}

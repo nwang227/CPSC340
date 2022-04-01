@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{MulticlassLogRegClassifier}\PYG{p}{(}\PYG{n}{LogRegClassifier}\PYG{p}{):}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{LogRegClassifier\PYGZsq{}s extention for multiclass classification.}
+\PYG{l+s+sd}{The constructor method and optimize() are inherited, so}
+\PYG{l+s+sd}{all you need to implement are fit() and predict() methods.}
+\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+\PYG{k}{def} \PYG{n+nf}{fit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}YOUR CODE HERE FOR Q3.4\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{n}\PYG{p}{,} \PYG{n}{d} \PYG{o}{=} \PYG{n}{X}\PYG{o}{.}\PYG{n}{shape}
+    \PYG{n}{uni} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{unique}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+    \PYG{n}{uni\PYGZus{}len} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{uni}\PYG{p}{)}
+    \PYG{n}{w\PYGZus{}start} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{uni\PYGZus{}len}\PYG{o}{*}\PYG{n}{d}\PYG{p}{)}
+    \PYG{n}{w}\PYG{p}{,} \PYG{n}{fs}\PYG{p}{,} \PYG{n}{gs}\PYG{p}{,} \PYG{n}{ws} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{optimize}\PYG{p}{(}\PYG{n}{w\PYGZus{}start}\PYG{p}{,} \PYG{n}{X}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+    \PYG{n}{W} \PYG{o}{=} \PYG{n}{w}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{([}\PYG{n}{uni\PYGZus{}len}\PYG{p}{,} \PYG{n}{d}\PYG{p}{])}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{W} \PYG{o}{=} \PYG{n}{W}
+
+\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{X\PYGZus{}hat}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}YOUR CODE HERE FOR Q3.4\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{argmax}\PYG{p}{(}\PYG{n}{X\PYGZus{}hat}\PYG{n+nd}{@self}\PYG{o}{.}\PYG{n}{W}\PYG{o}{.}\PYG{n}{T}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+\end{Verbatim}
