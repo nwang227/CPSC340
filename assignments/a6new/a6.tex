@@ -165,32 +165,87 @@ In \texttt{fun\_obj.py}, you will find classes named \texttt{RobustPCAFactorsLos
 Hint: Your code will look similar to the already implemented \texttt{PCAFactorsLoss} and \texttt{PCAFeaturesLoss} classes. Note that the arguments for \texttt{evaluate()} are carefully ordered and shaped to be compatible with our optimizers.
 
 Note: The robust PCA is somewhat sensitive to initialization, so multiple runs might be required to get a reasonable result.
+\begin{answer}
+	
 
+	\begin{minted}[]{python}
+	class RobustPCAFeaturesLoss(FunObj):
+		def __init__(self, epsilon):
+			self.epsilon = epsilon
+
+		def evaluate(self, z, W, X):
+			n, d = X.shape
+			k, _ = W.shape
+			Z = z.reshape(n, k)
+
+			R = Z @ W - X
+			R_2 = np.sqrt(R ** 2 + self.epsilon)
+			RR = R / R_2
+			f = np.sum(R_2) 
+			g = RR @ W.T
+			return f, g.flatten()
+
+	class RobustPCAFactorsLoss(FunObj):
+		def __init__(self, epsilon):
+			self.epsilon = epsilon
+
+		def evaluate(self, w, Z, X):
+			n, d = X.shape
+			_, k = Z.shape
+			W = w.reshape(k, d)
+
+			R = Z @ W - X
+			R_2 = np.sqrt(R ** 2 + self.epsilon)
+			RR = R / R_2
+			f = np.sum(R_2)
+			g = Z.T @ RR
+			return f, g.flatten()
+	\end{minted}
+
+	\begin{figure}[htbp!]
+		\centering
+		\includegraphics[width = .7\textwidth]{figs/robustpca_highway_003.jpg}
+	\end{figure}
+\end{answer}
 
 
 \subsection{Reflection \pts{6}}
 
 \begin{enumerate}
 	\item Very briefly comment on the results from the previous section --- does robust PCA seem to do better than regular PCA for this task?
-	%
+	\begin{answer}
+		From the figure, the robust result seems to better differentiate the cars and the highway.
+	\end{answer}
 	\item How does the number of video frames and the size of each frame relate to $n$, $d$, and/or $k$?
-	%
+	\begin{answer}
+		$n$ represents the number of video frames, $d$ refers to the size of rach frame. $k$ is selected by programmer, which is not related to the frames as long as $k < d$ 
+	\end{answer}
 	\item What would the effect be of changing the threshold (see code) in terms of false positives (cars we identify that aren't really there) and false negatives (real cars that we fail to identify)?
-	%
+	\begin{answer}
+		A higher threshold will give more false negatives but fewer false positives.
+	\end{answer}
 \end{enumerate}
 
 
-%\clearpage
+\clearpage
 \section{Movie Recommendations}
 
 If you run \texttt{python main.py -q 2}, the program will perform the following steps:
 
 \begin{enumerate}
 \item Loads the small educational version of the MovieLens dataset (\url{https://grouplens.org/datasets/movielens/}).
+\begin{answer}
+	
+\end{answer}
+
 \item Prints out the first 5 rows of the ratings dataframe (which we'll use) and the movies dataframe (which we won't use, but is loaded FYI).
+
 \item Transforms the ratings table into the $Y$ matrix described in lecture.
+
 \item Splits $Y$ into train (80\% of the ratings) and validation (20\% of the ratings) matrices.
+
 \item Prints out some stats about the dataset, including the average rating in the training set.
+
 \end{enumerate}
 
 \subsection{Understanding $Y$ \pts{6}}

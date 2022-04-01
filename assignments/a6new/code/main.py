@@ -136,7 +136,7 @@ def q1():
 
         utils.savefig(f"pca_highway_{i:03}.jpg", fig=fig)
         plt.close(fig)
-q1()
+
 
 @handle("1.3")
 def q1_3():
@@ -189,6 +189,7 @@ def q1_3():
         utils.savefig(f"robustpca_highway_{i:03}.jpg", fig)
         plt.close(fig)
 
+q1_3()
 
 @handle("2")
 def q2():

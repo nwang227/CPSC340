@@ -350,7 +350,16 @@ class RobustPCAFeaturesLoss(FunObj):
         self.epsilon = epsilon
 
     def evaluate(self, z, W, X):
-        raise NotImplementedError()
+        n, d = X.shape
+        k, _ = W.shape
+        Z = z.reshape(n, k)
+
+        R = Z @ W - X
+        R_2 = np.sqrt(R ** 2 + self.epsilon)
+        RR = R / R_2
+        f = np.sum(R_2) 
+        g = RR @ W.T
+        return f, g.flatten()
 
 
 
@@ -359,8 +368,16 @@ class RobustPCAFactorsLoss(FunObj):
         self.epsilon = epsilon
 
     def evaluate(self, w, Z, X):
-        raise NotImplementedError()
+        n, d = X.shape
+        _, k = Z.shape
+        W = w.reshape(k, d)
 
+        R = Z @ W - X
+        R_2 = np.sqrt(R ** 2 + self.epsilon)
+        RR = R / R_2
+        f = np.sum(R_2)
+        g = Z.T @ RR
+        return f, g.flatten()
 
 
 class MLPLoss(FunObj):  # (friendship is magic)
