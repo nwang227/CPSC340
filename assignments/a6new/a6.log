@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.31)  1 APR 2022 13:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.31)  3 APR 2022 20:42
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -461,78 +461,84 @@ Package pdftex.def Info: figs/robustpca_highway_003.jpg  used on input line 207.
  [4 <./figs/robustpca_highway_003.jpg>] [5]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 251.
+(hyperref)                removing `math shift' on input line 248.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 251.
+(hyperref)                removing `math shift' on input line 248.
 
-[6
+\openout3 = `a6.pyg'.
 
-]
-<./figs/sinusoids.png, id=122, 389.5353pt x 298.4751pt>
+(./_minted-a6/0C270A015E7D4A6FD9E433376E2582D9961A3ABAE8C6B540048706EED2152476.pygtex [6
+
+]) [7] [8]
+<./figs/sinusoids.png, id=132, 389.5353pt x 298.4751pt>
 File: ./figs/sinusoids.png Graphic file (type png)
 <use ./figs/sinusoids.png>
-Package pdftex.def Info: ./figs/sinusoids.png  used on input line 312.
+Package pdftex.def Info: ./figs/sinusoids.png  used on input line 374.
 (pdftex.def)             Requested size: 328.82707pt x 251.95615pt.
- [7]
-<./figs/sinusoids_decision_boundary_[2]_2.png, id=129, 411.939pt x 325.9377pt>
+ [9
+
+]
+<./figs/sinusoids_decision_boundary_[2]_2.png, id=138, 411.939pt x 325.9377pt>
 File: ./figs/sinusoids_decision_boundary_[2]_2.png Graphic file (type png)
 <use ./figs/sinusoids_decision_boundary_[2]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_decision_boundary_[2]_2.png  used on input line 316.
+Package pdftex.def Info: ./figs/sinusoids_decision_boundary_[2]_2.png  used on input line 378.
 (pdftex.def)             Requested size: 328.82707pt x 260.17358pt.
-<./figs/sinusoids_learned_features_[2]_2.png, id=130, 403.9893pt x 325.9377pt>
+<./figs/sinusoids_learned_features_[2]_2.png, id=139, 403.9893pt x 325.9377pt>
 File: ./figs/sinusoids_learned_features_[2]_2.png Graphic file (type png)
 <use ./figs/sinusoids_learned_features_[2]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_learned_features_[2]_2.png  used on input line 320.
+Package pdftex.def Info: ./figs/sinusoids_learned_features_[2]_2.png  used on input line 382.
 (pdftex.def)             Requested size: 328.82707pt x 265.30614pt.
- [8 <./figs/sinusoids.png> <./figs/sinusoids_decision_boundary_[2]_2.png>]
-<./figs/sinusoids_linear_boundary_[2]_2.png, id=137, 421.3341pt x 325.9377pt>
+ [10 <./figs/sinusoids.png> <./figs/sinusoids_decision_boundary_[2]_2.png>]
+<./figs/sinusoids_linear_boundary_[2]_2.png, id=146, 421.3341pt x 325.9377pt>
 File: ./figs/sinusoids_linear_boundary_[2]_2.png Graphic file (type png)
 <use ./figs/sinusoids_linear_boundary_[2]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_linear_boundary_[2]_2.png  used on input line 324.
+Package pdftex.def Info: ./figs/sinusoids_linear_boundary_[2]_2.png  used on input line 386.
 (pdftex.def)             Requested size: 328.82707pt x 254.38454pt.
-<./figs/sinusoids_decision_boundary_[4]_2.png, id=138, 411.939pt x 325.9377pt>
+<./figs/sinusoids_decision_boundary_[4]_2.png, id=147, 411.939pt x 325.9377pt>
 File: ./figs/sinusoids_decision_boundary_[4]_2.png Graphic file (type png)
 <use ./figs/sinusoids_decision_boundary_[4]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_decision_boundary_[4]_2.png  used on input line 329.
+Package pdftex.def Info: ./figs/sinusoids_decision_boundary_[4]_2.png  used on input line 391.
 (pdftex.def)             Requested size: 328.82707pt x 260.17358pt.
- [9 <./figs/sinusoids_learned_features_[2]_2.png> <./figs/sinusoids_linear_boundary_[2]_2.png>]
-<./figs/sinusoids_linear_boundary_[4]_2.png, id=145, 421.3341pt x 325.9377pt>
+ [11 <./figs/sinusoids_learned_features_[2]_2.png> <./figs/sinusoids_linear_boundary_[2]_2.png>]
+<./figs/sinusoids_linear_boundary_[4]_2.png, id=154, 421.3341pt x 325.9377pt>
 File: ./figs/sinusoids_linear_boundary_[4]_2.png Graphic file (type png)
 <use ./figs/sinusoids_linear_boundary_[4]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_linear_boundary_[4]_2.png  used on input line 330.
+Package pdftex.def Info: ./figs/sinusoids_linear_boundary_[4]_2.png  used on input line 392.
 (pdftex.def)             Requested size: 328.82707pt x 254.38454pt.
-<./figs/sinusoids_decision_boundary_[2, 2]_2.png, id=146, 411.939pt x 325.9377pt>
+<./figs/sinusoids_decision_boundary_[2, 2]_2.png, id=155, 411.939pt x 325.9377pt>
 File: ./figs/sinusoids_decision_boundary_[2, 2]_2.png Graphic file (type png)
 <use ./figs/sinusoids_decision_boundary_[2, 2]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_decision_boundary_[2, 2]_2.png  used on input line 336.
+Package pdftex.def Info: ./figs/sinusoids_decision_boundary_[2, 2]_2.png  used on input line 398.
 (pdftex.def)             Requested size: 328.82707pt x 260.17358pt.
- [10 <./figs/sinusoids_decision_boundary_[4]_2.png> <./figs/sinusoids_linear_boundary_[4]_2.png>]
-<./figs/sinusoids_linear_boundary_[2, 2]_2.png, id=153, 421.3341pt x 325.9377pt>
+ [12 <./figs/sinusoids_decision_boundary_[4]_2.png> <./figs/sinusoids_linear_boundary_[4]_2.png>]
+<./figs/sinusoids_linear_boundary_[2, 2]_2.png, id=162, 421.3341pt x 325.9377pt>
 File: ./figs/sinusoids_linear_boundary_[2, 2]_2.png Graphic file (type png)
 <use ./figs/sinusoids_linear_boundary_[2, 2]_2.png>
-Package pdftex.def Info: ./figs/sinusoids_linear_boundary_[2, 2]_2.png  used on input line 337.
+Package pdftex.def Info: ./figs/sinusoids_linear_boundary_[2, 2]_2.png  used on input line 399.
 (pdftex.def)             Requested size: 328.82707pt x 254.38454pt.
- [11 <./figs/sinusoids_decision_boundary_[2, 2]_2.png> <./figs/sinusoids_linear_boundary_[2, 2]_2.png>] [12] (./a6.aux)
+ [13 <./figs/sinusoids_decision_boundary_[2, 2]_2.png> <./figs/sinusoids_linear_boundary_[2, 2]_2.png>] [14] [15
+
+] (./a6.aux)
 Package rerunfilecheck Info: File `a6.out' has not changed.
 (rerunfilecheck)             Checksum: D9A52BC8B65C6CA2B3CBDCB761C88C60;3452.
 runsystem(rm a6.pyg)...executed.
 
  ) 
 Here is how much of TeX's memory you used:
- 13700 strings out of 478994
- 218021 string characters out of 5858184
- 585248 words of memory out of 5000000
- 30899 multiletter control sequences out of 15000+600000
- 412284 words of font info for 62 fonts, out of 8000000 for 9000
+ 13709 strings out of 478994
+ 218453 string characters out of 5858184
+ 610084 words of memory out of 5000000
+ 30902 multiletter control sequences out of 15000+600000
+ 412452 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  72i,13n,74p,1124b,655s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on a6.pdf (12 pages, 469369 bytes).
+</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on a6.pdf (15 pages, 483060 bytes).
 PDF statistics:
- 240 PDF objects out of 1000 (max. 8388607)
- 192 compressed objects within 2 object streams
- 55 named destinations out of 1000 (max. 500000)
+ 258 PDF objects out of 1000 (max. 8388607)
+ 205 compressed objects within 3 object streams
+ 58 named destinations out of 1000 (max. 500000)
  166 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,0 +1,35 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{CollaborativeFilteringZLoss}\PYG{p}{(}\PYG{n}{FunObj}\PYG{p}{):}
+	\PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{lammyZ}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{lammyW}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{):}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyZ} \PYG{o}{=} \PYG{n}{lammyZ}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyW} \PYG{o}{=} \PYG{n}{lammyW}
+
+	\PYG{k}{def} \PYG{n+nf}{evaluate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{z}\PYG{p}{,} \PYG{n}{W}\PYG{p}{,} \PYG{n}{Y}\PYG{p}{):}
+		\PYG{n}{n}\PYG{p}{,} \PYG{n}{d} \PYG{o}{=} \PYG{n}{Y}\PYG{o}{.}\PYG{n}{shape}
+		\PYG{n}{k}\PYG{p}{,} \PYG{n}{\PYGZus{}} \PYG{o}{=} \PYG{n}{W}\PYG{o}{.}\PYG{n}{shape}
+		\PYG{n}{Z} \PYG{o}{=} \PYG{n}{z}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{k}\PYG{p}{)}
+
+		\PYG{n}{R} \PYG{o}{=} \PYG{n}{Z} \PYG{o}{@} \PYG{n}{W} \PYG{o}{\PYGZhy{}} \PYG{n}{Y}
+		\PYG{n}{R}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{isnan}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{)]} \PYG{o}{=} \PYG{l+m+mi}{0}
+		\PYG{n}{f} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{R} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyZ} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{Z} \PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyW} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{W} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}
+		\PYG{n}{g} \PYG{o}{=}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{R} \PYG{o}{@} \PYG{n}{W}\PYG{o}{.}\PYG{n}{T} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyZ} \PYG{o}{*} \PYG{n}{Z}
+		\PYG{k}{return} \PYG{n}{f}\PYG{p}{,} \PYG{n}{g}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+
+
+
+\PYG{k}{class} \PYG{n+nc}{CollaborativeFilteringWLoss}\PYG{p}{(}\PYG{n}{FunObj}\PYG{p}{):}
+	\PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{lammyZ}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{lammyW}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{):}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyZ} \PYG{o}{=} \PYG{n}{lammyZ}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyW} \PYG{o}{=} \PYG{n}{lammyW}
+
+	\PYG{k}{def} \PYG{n+nf}{evaluate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{w}\PYG{p}{,} \PYG{n}{Z}\PYG{p}{,} \PYG{n}{Y}\PYG{p}{):}
+		\PYG{n}{n}\PYG{p}{,} \PYG{n}{d} \PYG{o}{=} \PYG{n}{Y}\PYG{o}{.}\PYG{n}{shape}
+		\PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{k} \PYG{o}{=} \PYG{n}{Z}\PYG{o}{.}\PYG{n}{shape}
+		\PYG{n}{W} \PYG{o}{=} \PYG{n}{w}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{n}{k}\PYG{p}{,} \PYG{n}{d}\PYG{p}{)}
+
+		\PYG{n}{R} \PYG{o}{=} \PYG{n}{Z} \PYG{o}{@} \PYG{n}{W} \PYG{o}{\PYGZhy{}} \PYG{n}{Y}
+		\PYG{n}{R}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{isnan}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{)]} \PYG{o}{=} \PYG{l+m+mi}{0}
+		\PYG{n}{f} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{R} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyZ} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{Z} \PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyW} \PYG{o}{*} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{W} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}
+		\PYG{n}{g} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*} \PYG{n}{Z}\PYG{o}{.}\PYG{n}{T} \PYG{o}{@} \PYG{n}{R} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lammyW} \PYG{o}{*} \PYG{n}{W}
+		\PYG{k}{return} \PYG{n}{f}\PYG{p}{,} \PYG{n}{g}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{()}
+\end{Verbatim}

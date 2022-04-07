@@ -234,9 +234,6 @@ If you run \texttt{python main.py -q 2}, the program will perform the following 
 
 \begin{enumerate}
 \item Loads the small educational version of the MovieLens dataset (\url{https://grouplens.org/datasets/movielens/}).
-\begin{answer}
-	
-\end{answer}
 
 \item Prints out the first 5 rows of the ratings dataframe (which we'll use) and the movies dataframe (which we won't use, but is loaded FYI).
 
@@ -254,8 +251,17 @@ If you run \texttt{python main.py -q 2}, the program will perform the following 
 
 \begin{enumerate}
 \item In lecture, we used the ``?'' symbol to represent missing ratings. How are these missing entries of $Y$ implemented in the code?
+\begin{answer}
+	The missing entries would marked as NaN, and will be ignored in computation.
+\end{answer}
 \item How many (non-missing) ratings are there in \texttt{Y\_train} and \texttt{Y\_valid}, respectively?
+\begin{answer}
+	There are 5850972 non-missing ratings in the training set and 5911472 in the validation set. 
+\end{answer}
 \item Does the same user-movie rating ever appear in \emph{both} \texttt{Y\_train} and \texttt{Y\_valid}? Is the result as expected?
+\begin{answer}
+	From the code, there should not be any identical user-movie rating since no users is in both set. We also check whether there exsis identical ratings. It's possible that we have identical ratings from two different users, though the possibility can be really small given the large number of movies. We didn't find any identical rating.
+\end{answer}
 \end{enumerate}
 
 
@@ -264,7 +270,44 @@ If you run \texttt{python main.py -q 2}, the program will perform the following 
 If you run \texttt{python main.py -q 2.2}, the code will fit a model that doesn't actually do anything. It uses the same alternating minimization scheme as in the previous question on Robust PCA. \ask{Fill in the \texttt{evaluate} methods of the \texttt{CollaborativeFilteringWLoss} and \texttt{CollaborativeFilteringZLoss} classes in \texttt{fun\_obj.py}. Submit your code.}
 
 Hint: Since we're minimizing the regularized PCA loss, your code should be quite similar to the \texttt{evaluate} methods in \texttt{PCAFeaturesLoss} and \texttt{PCAFactorsLoss}. I suggest you copy/paste those methods as a starting point. However, there are two changes you'll need to make: (1) modify the loss and gradient to account for the regularization, and (2) accounting for the fact that the loss should only sum over the available ratings, not the entire $Y$ matrix. The easiest way to account for this is to modify the $R$ matrix by setting all its NaN values to 0. Since $R$ represents the residuals (or reconstruction errors), setting these to 0 says that these entries don't contribute to the loss, which is exactly what we want.
+\begin{answer}
+	\begin{minted}[]{python}
+	class CollaborativeFilteringZLoss(FunObj):
+		def __init__(self, lammyZ=1, lammyW=1):
+			self.lammyZ = lammyZ
+			self.lammyW = lammyW
 
+		def evaluate(self, z, W, Y):
+			n, d = Y.shape
+			k, _ = W.shape
+			Z = z.reshape(n, k)
+
+			R = Z @ W - Y
+			R[np.isnan(Y)] = 0
+			f = np.sum(R ** 2) + self.lammyZ * np.sum(Z **2)/2 + self.lammyW * np.sum(W ** 2)/2
+			g =2 * R @ W.T + self.lammyZ * Z
+			return f, g.flatten()
+
+
+
+	class CollaborativeFilteringWLoss(FunObj):
+		def __init__(self, lammyZ=1, lammyW=1):
+			self.lammyZ = lammyZ
+			self.lammyW = lammyW
+
+		def evaluate(self, w, Z, Y):
+			n, d = Y.shape
+			_, k = Z.shape
+			W = w.reshape(k, d)
+
+			R = Z @ W - Y
+			R[np.isnan(Y)] = 0
+			f = np.sum(R ** 2) + self.lammyZ * np.sum(Z **2)/2 + self.lammyW * np.sum(W ** 2)/2
+			g = 2* Z.T @ R + self.lammyW * W
+			return f, g.flatten()
+			
+	\end{minted}
+\end{answer}
 
 
 \subsection{Hyperparameter tuning \pts{5}}
@@ -274,12 +317,18 @@ As you'll see from the output, this baseline has a root mean squared error (RMSE
 PS: there is nothing to stop you from just guessing random hyperparameters, but it would be cool if you think about the fact that the current model overfits and adjust each of the hyperparameters in the direction that reduces the complexity of the model to combat the overfitting.
 
 
+\begin{answer}
+	Since the model now is overfitting, one way to deal with it is to punish more on overcomplication. We can achieve that by increasing $\lambda_z$ and $\lambda_w$. Also we can deal with overfitting issue by increasing $k$. I eventually made $\lambda_z = 9$, $\lambda_w = 9$ and $k = 150$. This model has a validation RMSE of $0.90$.
+\end{answer}
 \subsection{Regularization with PCA \pts{5}}
 
 In lecture we discussed the fact that with regularized PCA, we need to regularize both $W$ and $Z$ for things to make sense. Test this out empirically by setting $\lambda_Z=0$ and $\lambda_W>0$. Modify the code so that it prints out the Frobenius norm of $W$ and $Z$ after each iteration of the alternating minimization (you don't have to submit this printing code though). \ask{Describe your observations and briefly discuss.}
 
+\begin{answer}
+	If I set $\lambda_Z=0$ and $\lambda_W>0$, then the model will generate a relatively small $W$ but a incredible large $Z$. If, I set the other way around, I would have a small $Z$ but a large $W$. In both cases, the model has an almost zero training error, but a large validation error.
+\end{answer}
 
-%\clearpage
+\clearpage
 \section{Neural Networks}
 
 \subsection{Neural Networks by Hand \pts{7}}
@@ -289,6 +338,17 @@ Suppose that we train a neural network with sigmoid activations and one hidden l
 W = \mat{-2 & 2 & -1\\1 & -2 & 0}, v = \mat{3 \\1}.
 \]
 Assuming that we are doing regression, \ask{for a training example with features $x_i^T = \mat{-4 &-2 & 4}$ what are the values in this network of $z_i$, $h(z_i)$, and $\hat{y}_i$?}
+\begin{answer}
+	\begin{equation*}
+		z_i = W x_i = \mat{-2 & 2 & -1\\1 & -2 & 0} \mat{-4\\-2\\4} = \mat{0\\0}
+	\end{equation*}
+	\begin{equation*}
+		h(z_i) = \mat{0.5 \\ 0.5}
+	\end{equation*}
+	\begin{equation*}
+		\hat{y}_i = v^T h(z_i) = \mat{3 & 1} \mat{0.5 \\ 0.5} = 2
+	\end{equation*}
+\end{answer}
 
 \subsection{Neural Networks vs. Linear Classifier \pts{7}}
 
@@ -300,7 +360,9 @@ The performance of this model is already quite good, with around 8\% training an
 
 If you run \texttt{python main.py -q 3.2}, the program will train a single-layer neural network (one-layer nonlinear encoder paired with a linear classifier) on the same dataset using some pre-tuned hyperparameters. Modify the code, play around with the hyperparameter values (configurations of encoder layers, batch size and learning rate of SGD, standardization, etc.) until you achieve validation error that is reliably below \red{5}\%. \ask{Report (1) the training and validation errors that you obtain with your hyperparameters, and (2) the hyperparameters that you used.}
 
-
+\begin{answer}
+	I increased the dimension of encoder to be $100$. Instead of using constant learning rate, I used inverse square root and set the step to $10^{-1}$. I also increased the batch size to $700$ and standarized the data. In the end, I got a training error of $3.8\%$ and a validation error of $4.3\%$.
+\end{answer}
 
 
 \subsection{Neural Disentangling \pts{10}}
@@ -340,40 +402,66 @@ Previously we changed the \emph{hidden layer size} from 2 to 4. Another change w
 
 \begin{enumerate}
 	\item Why are the axes ($z_1$ and $z_2$) of the learned feature space scatterplot constrained to $[0, 1]$? Note/hint: here, our definition of $z$ is after the nonlinearity is applied, whereas in the lecture $z$ is defined as before the nonlinearity is applied. Sorry about that!
-	%
+	\begin{answer}
+		Because we used the sigmoid function to transform the value. This funciton has a range of $[0, 1]$
+	\end{answer}
 	\item Does it make sense to use neural networks on datasets whose examples are linearly separable in the original feature space?
-	%
+	\begin{answer}
+		No. If the examples are linearly separable, there is no meaning of using a more complicated non-linear function.
+	\end{answer}
 	\item Why would increasing the dimensionality of the hidden features (which is a hyper-parameter) help improve the performance of our classifier?
-	%
+	\begin{answer}
+		With higher dimension of hidden features, the network can classify the example with finer features, and therefore can better disentangle different features. 
+	\end{answer}
 	\item Why would increasing the number of layers help improve the performance of our classifier?
-	%
+	\begin{answer}
+		With more layers, the network can assemble more detailed re-useable parts, allowing for more space for approximation. Therefore, one benefit is to recognize similar but slightly different inputs.
+	\end{answer}
 	\item Neural networks are known to suffer problems due to a highly non-convex objective function. What is one way we can address this problem and increase the chances of discovering a global optimum? (Hint: look at the code.)
-	%
+	\begin{answer}
+		We can train the model multiple times with random starting point. In the code, warm-start is used to reset the optimizer.
+	\end{answer}
 \end{enumerate}
 
-
+\clearpage
 \section{Very-Short Answer Questions \pts{14}}
 
 \ask{Answer each of the following questions in a sentence or two.}
 \begin{enumerate}
 
 \item Give one reason why you might want sparse solutions with a latent-factor model.
-
+\begin{answer}
+	Non-negative coefficients can be more interpretable.
+\end{answer}
 
 \item Which is better for recommending movies to a new user, collaborative filtering or content-based filtering? Briefly justify your answer.
-
+\begin{answer}
+	Content-based filtering. Collaborative filtering needs users previous rating.
+\end{answer}
 
 \item{Are neural networks mainly used for supervised or unsupervised learning? Are they parametric or nonparametric?}
+\begin{answer}
+	Supervised learning. Parametric.
+\end{answer}
 
 \item{Why might regularization become more important as we add layers to a neural network?}
-
+\begin{answer}
+	Because as we add layers, the model becomes more complicated and it can lead to overfitting. Regularization can be used to deal with overfitting.
+\end{answer}
 
 \item{Consider using a fully-connected neural network for 5-class classification on a problem with $d=10$. If the network has one hidden layer of size $k=100$, how many parameters (including biases), does the network have?}
-
+\begin{answer}
+	There are $10 \times 100 + 100 \times 5 = 1500$ weights, $100 + 5 = 105$ biases. All together $1605$.
+\end{answer}
 
 \item What is the ``vanishing gradient'' problem with neural networks based on sigmoid non-linearities?
-
+\begin{answer}
+	The gradients can be nearly zero after sigmoid transformation if the orginail value is far away from zero.
+\end{answer}
 \item{Convolutional networks seem like a pain... why not just use regular (``fully connected'') neural networks for image classification?}
+\begin{answer}
+	Because the number of parameters can be huge is we always use fully connected network.
+\end{answer}
 
 \end{enumerate}
 \end{document}

@@ -331,7 +331,16 @@ class CollaborativeFilteringZLoss(FunObj):
         self.lammyW = lammyW
 
     def evaluate(self, z, W, Y):
-        raise NotImplementedError()
+        n, d = Y.shape
+        k, _ = W.shape
+        Z = z.reshape(n, k)
+
+        R = Z @ W - Y
+        R[np.isnan(Y)] = 0
+        f = np.sum(R ** 2) + self.lammyZ * np.sum(Z **2)/2 + self.lammyW * np.sum(W ** 2)/2
+        g =2 * R @ W.T + self.lammyZ * Z
+        print( "Frobenius norm of Z is: %.2f" % np.sum(Z ** 2))
+        return f, g.flatten()
 
 
 
@@ -341,7 +350,16 @@ class CollaborativeFilteringWLoss(FunObj):
         self.lammyW = lammyW
 
     def evaluate(self, w, Z, Y):
-        raise NotImplementedError()
+        n, d = Y.shape
+        _, k = Z.shape
+        W = w.reshape(k, d)
+
+        R = Z @ W - Y
+        R[np.isnan(Y)] = 0
+        f = np.sum(R ** 2) + self.lammyZ * np.sum(Z **2)/2 + self.lammyW * np.sum(W ** 2)/2
+        g = 2* Z.T @ R + self.lammyW * W
+        print("Frobenius norm of W is: %.2f" %np.sum(W ** 2))
+        return f, g.flatten()
 
 
 

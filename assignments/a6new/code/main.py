@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import LabelBinarizer
+from learning_rate_getters import InverseSqrtLR
+from learning_rate_getters import InverseLR, InverseSquaredLR
 
 
 # make sure we're working in the directory this file lives in,
@@ -189,7 +191,7 @@ def q1_3():
         utils.savefig(f"robustpca_highway_{i:03}.jpg", fig)
         plt.close(fig)
 
-q1_3()
+
 
 @handle("2")
 def q2():
@@ -207,6 +209,9 @@ def q2():
     print("Number of movies:", d)
 
     print("Number of ratings:", len(ratings))
+    
+  
+
 
     Y_train, Y_valid = utils.create_rating_matrix(ratings, n, d, "userId", "movieId")
 
@@ -217,7 +222,7 @@ def q2():
         "The average rating in the training set (again): %.2f"
         % np.mean(Y_train[~np.isnan(Y_train)])
     )
-
+   
 
 @handle("2.1")
 def q2_1():
@@ -233,7 +238,20 @@ def q2_1():
 
     Y_train, Y_valid = utils.create_rating_matrix(ratings, n, d, "userId", "movieId")
 
-    raise NotImplementedError()
+    print("Number of ratings in traing set %.2f" % np.count_nonzero(np.isnan(Y_train)))
+
+    print("Number of ratings in validation set %.2f" % np.count_nonzero(np.isnan(Y_valid)))
+
+
+    def view1D(a, b): # a, b are arrays
+        a = np.ascontiguousarray(a)
+        b = np.ascontiguousarray(b)
+        void_dt = np.dtype((np.void, a.dtype.itemsize * a.shape[1]))
+        return a.view(void_dt).ravel(),  b.view(void_dt).ravel()
+
+    A,B = view1D(Y_train, Y_valid)
+    out = np.isin(A,B)
+    print(np.sum(out))
 
 
 
@@ -292,7 +310,6 @@ def q2_2():
     RMSE_valid = np.sqrt(np.nanmean((Y_hat - Y_valid) ** 2))
     print("Valid RMSE of ratings: %.2f" % RMSE_valid)
 
-
 @handle("2.3")
 def q2_3():
     ratings = pd.read_csv("../data/ml-latest-small/ratings.csv")
@@ -307,9 +324,9 @@ def q2_3():
 
     avg_rating = np.nanmean(Y_train)
 
-    k = 50
-    fun_obj_w = CollaborativeFilteringWLoss(lammyZ=1, lammyW=1)
-    fun_obj_z = CollaborativeFilteringZLoss(lammyZ=1, lammyW=1)
+    k = 150
+    fun_obj_w = CollaborativeFilteringWLoss(lammyZ=9, lammyW=9)
+    fun_obj_z = CollaborativeFilteringZLoss(lammyZ=9, lammyW=9)
 
 
     optimizer_w = GradientDescentLineSearch(max_evals=100, verbose=False)
@@ -354,7 +371,25 @@ def q2_4():
     Y_train, Y_valid = utils.create_rating_matrix(ratings, n, d, "userId", "movieId")
     avg_rating = np.nanmean(Y_train)
 
-    raise NotImplementedError()
+    k = 150
+    fun_obj_w = CollaborativeFilteringWLoss(lammyZ=9, lammyW=0)
+    fun_obj_z = CollaborativeFilteringZLoss(lammyZ=9, lammyW=0)
+
+
+    optimizer_w = GradientDescentLineSearch(max_evals=100, verbose=False)
+    optimizer_z = GradientDescentLineSearch(max_evals=100, verbose=False)
+    model = LinearEncoderGradient(
+        k, fun_obj_w, fun_obj_z, optimizer_w, optimizer_z, centering="all")
+
+    model.fit(Y_train)
+    Y_hat = model.Z @ model.W + model.mu
+
+    RMSE_train = np.sqrt(np.nanmean((Y_hat - Y_train) ** 2))
+    print("Train RMSE of ratings: %.2f" % RMSE_train)
+
+    RMSE_valid = np.sqrt(np.nanmean((Y_hat - Y_valid) ** 2))
+    print("Valid RMSE of ratings: %.2f" % RMSE_valid)
+
 
 
 
@@ -414,11 +449,13 @@ def q3_2():
     n, d = X_train.shape
     _, k = Y_train.shape  # k is the number of classes
 
+    X_train_standardized, mu, sigma = utils.standardize_cols(X_train)
+    X_valid_standardized, _, _ = utils.standardize_cols(X_valid, mu, sigma)
 
     # Assemble a neural network
     # put hidden layer dimensions to increase the number of layers in encoder
-    hidden_feature_dims = []
-    output_dim = 2
+    hidden_feature_dims = [100]
+    output_dim = 100
 
     # First, initialize an encoder and a predictor
     layer_sizes = [d, *hidden_feature_dims, output_dim]
@@ -426,34 +463,34 @@ def q3_2():
     predictor = LinearModelMultiOutput(output_dim, k)
 
     # Function object will associate the encoder and the predictor during training
-    fun_obj = MLPLogisticRegressionLossL2(encoder, predictor, 1.)
+    fun_obj = MLPLogisticRegressionLossL2(encoder, predictor, 1)
 
     # Choose optimization strategy
     child_optimizer = GradientDescent()
-    learning_rate_getter = ConstantLR(1e-2)
-    # learning_rate_getter = LearningRateGetterInverseSqrt(1e0)
+    #learning_rate_getter = ConstantLR(1e-3)
+    learning_rate_getter = InverseSqrtLR(1e-1)
     optimizer = StochasticGradient(
-        child_optimizer, learning_rate_getter, 500, max_evals=10
+        child_optimizer, learning_rate_getter, 700, max_evals=20
     )
 
     # Assemble!
     model = NeuralNet(fun_obj, optimizer, encoder, predictor, classifier_yes=True)
 
     t = time.time()
-    model.fit(X_train, Y_train)
+    model.fit(X_train_standardized, Y_train)
     print("Fitting took {:f} seconds".format((time.time() - t)))
 
     # Compute training error
-    y_hat = model.predict(X_train)
+    y_hat = model.predict(X_train_standardized)
     err_train = np.mean(y_hat != y_train)
     print("Training error = ", err_train)
 
     # Compute validation error
-    y_hat = model.predict(X_valid)
+    y_hat = model.predict(X_valid_standardized)
     err_valid = np.mean(y_hat != y_valid)
     print("Validation error     = ", err_valid)
 
-
+q3_2()
 @handle("3.3")
 def q3_3():
     data = load_dataset("sinusoids.pkl")
